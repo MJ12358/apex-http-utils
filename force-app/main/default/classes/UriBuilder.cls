@@ -191,7 +191,4 @@ public with sharing class UriBuilder {
 	private String getDelimiter(Integer count) {
 		return count == 0 ? '?' : '&';
 	}
-
-	class UriBuilderException extends Exception {}
-
 }

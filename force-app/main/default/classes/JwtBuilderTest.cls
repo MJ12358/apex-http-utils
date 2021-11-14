@@ -42,7 +42,7 @@ public class JwtBuilderTest {
 				.cert(null)
 				.build();
 			System.assert(false, 'Excepted an exception');
-		} catch (JwtBuilder.JwtBuilderException e) {
+		} catch (JwtBuilderException e) {
 			System.assert(true, 'Exception caught');
 		}
 		Test.stopTest();
@@ -56,7 +56,7 @@ public class JwtBuilderTest {
 				.key(null)
 				.build();
 			System.assert(false, 'Excepted an exception');
-		} catch (JwtBuilder.JwtBuilderException e) {
+		} catch (JwtBuilderException e) {
 			System.assert(true, 'Exception caught');
 		}
 		Test.stopTest();
@@ -70,7 +70,7 @@ public class JwtBuilderTest {
 				.expires(Datetime.now().addSeconds(-3600))
 				.build();
 			System.assert(false, 'Excepted an exception');
-		} catch (JwtBuilder.JwtBuilderException e) {
+		} catch (JwtBuilderException e) {
 			System.assert(true, 'Exception caught');
 		}
 		Test.stopTest();

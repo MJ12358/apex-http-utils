@@ -655,6 +655,4 @@ public with sharing class HttpBuilder {
 			endTime = Datetime.now().getTime();
 		}
 	}
-
-	class HttpBuilderException extends Exception {}
 }

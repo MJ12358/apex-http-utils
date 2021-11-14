@@ -271,6 +271,4 @@ public with sharing class JwtBuilder {
 		HS256,
 		RS256
 	}
-
-	class JwtBuilderException extends Exception {}
 }

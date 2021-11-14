@@ -67,7 +67,7 @@ public class UriBuilderTest {
 		try {
 			new UriBuilder(BASEURL).port(0).build();
 			System.assert(false, 'Expected an exception');
-		} catch (UriBuilder.UriBuilderException e) {
+		} catch (UriBuilderException e) {
 			System.assert(true, 'Exception caught');
 		}
 		Test.stopTest();
@@ -79,7 +79,7 @@ public class UriBuilderTest {
 		try {
 			new UriBuilder(BASEURL).encode(null).build();
 			System.assert(false, 'Expected an exception');
-		} catch (UriBuilder.UriBuilderException e) {
+		} catch (UriBuilderException e) {
 			System.assert(true, 'Exception caught');
 		}
 		Test.stopTest();

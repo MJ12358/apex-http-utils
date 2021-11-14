@@ -232,6 +232,4 @@ public class HttpFormBuilder {
 		CrLf,
 		None
 	}
-
-	class HttpFormBuilderException extends Exception {}
 }

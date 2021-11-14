@@ -32,7 +32,7 @@ public class HttpBuilderTest {
 				.get()
 				.send();
 			System.assert(false, 'Expected an exception');
-		} catch (HttpBuilder.HttpBuilderException e) {
+		} catch (HttpBuilderException e) {
 			System.assert(true, 'Exception caught');
 		}
 		Test.stopTest();
@@ -181,7 +181,7 @@ public class HttpBuilderTest {
 				.method((HttpMethod)null) // ambugious param exception if its not cast
 				.send();
 			System.assert(false, 'Expected an exception');
-		} catch (HttpBuilder.HttpBuilderException e) {
+		} catch (HttpBuilderException e) {
 			System.assert(true, 'Exception caught');
 		}
 		Test.stopTest();
@@ -195,7 +195,7 @@ public class HttpBuilderTest {
 				.method('')
 				.send();
 			System.assert(false, 'Expected an exception');
-		} catch (HttpBuilder.HttpBuilderException e) {
+		} catch (HttpBuilderException e) {
 			System.assert(true, 'Exception caught');
 		}
 		Test.stopTest();
@@ -271,7 +271,7 @@ public class HttpBuilderTest {
 				.get()
 				.send();
 			System.assert(false, 'Expected an exception');
-		} catch (HttpBuilder.HttpBuilderException e) {
+		} catch (HttpBuilderException e) {
 			System.assert(true, 'Exception caught');
 		}
 		Test.stopTest();
@@ -285,7 +285,7 @@ public class HttpBuilderTest {
 			.cache(172801)
 			.build();
 			System.assert(false, 'Expected an exception');
-		} catch (HttpBuilder.HttpBuilderException e) {
+		} catch (HttpBuilderException e) {
 			System.assert(true, 'Exception caught');
 		}
 		Test.stopTest();
@@ -331,7 +331,7 @@ public class HttpBuilderTest {
 					.get()
 					.send();
 				System.assert(false, 'Expected an exception');
-			} catch (HttpBuilder.HttpBuilderException e) { // the location headers have not been set
+			} catch (HttpBuilderException e) { // the location headers have not been set
 				System.assert(true, 'Exception caught');
 			}
 			mock.next();
@@ -354,7 +354,7 @@ public class HttpBuilderTest {
 					.retry(1)
 					.send();
 				System.assert(false, 'Expected an exception');
-			} catch (HttpBuilder.HttpBuilderException e) { // the max retries were reached
+			} catch (HttpBuilderException e) { // the max retries were reached
 				System.assert(true, 'Exception caught');
 			}
 			mock.next();
@@ -399,17 +399,4 @@ public class HttpBuilderTest {
 		}
 		Test.stopTest();
 	}
-
-	// @IsTest
-	// static void testSchedule429() {
-	// 	Test.startTest();
-	// 	Test.setMock(HttpCalloutMock.class, new HttpMock().setStatusCode(429));
-	// 	HttpBuilder builder = new HttpBuilder().endpoint(endpoint)
-	// 		.get()
-	// 		.header('Retry-After', 1)
-	// 		.send();
-	// 	Test.stopTest();
-	// 	System.assert([SELECT Id FROM CronTrigger WHERE Id = :builder.getJobId()].size() > 0);
-	// }
-
 }
