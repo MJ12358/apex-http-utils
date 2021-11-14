@@ -1,0 +1,24 @@
+<aura:component>
+
+	<aura:attribute name="isLoading" type="Boolean" />
+
+	<aura:method name="callServer" action="{!c.callServer}">
+		<aura:attribute name="action" type="Map" required="true" />
+		<aura:attribute name="params" type="Map" required="true" />
+		<aura:attribute name="successCallback" type="Function" />
+		<aura:attribute name="errorCallback" type="Function" />
+		<aura:attribute name="disableErrorNotification" type="Boolean" default="false" />
+		<aura:attribute name="disableLoading" type="Boolean" />
+	</aura:method>
+
+	<aura:method name="displaySuccess" action="{!c.displaySuccess}">
+		<aura:attribute name="message" type="String" />
+		<aura:attribute name="title" type="String" />
+	</aura:method>
+
+	<aura:method name="displayError" action="{!c.displayError}">
+		<aura:attribute name="message" type="String" />
+		<aura:attribute name="title" type="String" />
+	</aura:method>
+
+</aura:component>

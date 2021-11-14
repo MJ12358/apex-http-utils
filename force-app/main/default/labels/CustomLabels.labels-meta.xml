@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+	<labels>
+		<fullName>jwt_AlgorithmBlank</fullName>
+		<categories>jwt</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>jwt_AlgorithmBlank</shortDescription>
+		<value>Algorithm must not be blank</value>
+	</labels>
+	<labels>
+		<fullName>jwt_TypeBlank</fullName>
+		<categories>jwt</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>jwt_TypeBlank</shortDescription>
+		<value>Type must not be blank</value>
+	</labels>
+	<labels>
+		<fullName>jwt_ExpirationInvalid</fullName>
+		<categories>jwt</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>jwt_TypeBlank</shortDescription>
+		<value>Expiration must be after the current date/time</value>
+	</labels>
+	<labels>
+		<fullName>jwt_CertificateBlank</fullName>
+		<categories>jwt</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>jwt_CertificateBlank</shortDescription>
+		<value>Certificate name must not be blank</value>
+	</labels>
+	<labels>
+		<fullName>jwt_PrivateKeyBlank</fullName>
+		<categories>jwt</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>jwt_PrivateKeyBlank</shortDescription>
+		<value>Private key must not be blank</value>
+	</labels>
+	<labels>
+		<fullName>jwt_HS256PrivateKeyBlank</fullName>
+		<categories>jwt</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>jwt_HS256PrivateKeyBlank</shortDescription>
+		<value>When using HS256 the "key" must not be blank</value>
+	</labels>
+	<labels>
+		<fullName>jwt_RS256CertOrKeyBlank</fullName>
+		<categories>jwt</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>jwt_RS256CertOrKeyBlank</shortDescription>
+		<value>When using RS256 the "cert" or "key" must not be blank</value>
+	</labels>
+	<labels>
+		<fullName>jwt_AlgorithmNotImplemented</fullName>
+		<categories>jwt</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>jwt_AlgorithmNotImplemented</shortDescription>
+		<value>The algorithm given has not been implemented</value>
+	</labels>
+	<labels>
+		<fullName>http_ReadOnly</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_ReadOnly</shortDescription>
+		<value>Callouts cannot be made when the application/organization is in read only mode</value>
+	</labels>
+	<labels>
+		<fullName>http_MethodNull</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_MethodNull</shortDescription>
+		<value>The http method must not be null</value>
+	</labels>
+	<labels>
+		<fullName>http_MethodBlank</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_MethodBlank</shortDescription>
+		<value>The http method must not be blank</value>
+	</labels>
+	<labels>
+		<fullName>http_CacheLimit</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_CacheLimit</shortDescription>
+		<value>The ttl given is not within limits [300 - 172800]</value>
+	</labels>
+	<labels>
+		<fullName>http_EndpointBlank</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_EndpointBlank</shortDescription>
+		<value>The endpoint must not be blank</value>
+	</labels>
+	<labels>
+		<fullName>http_TimeoutLimit</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_TimeoutLimit</shortDescription>
+		<value>The timeout is not within limits [1 - 120000]</value>
+	</labels>
+	<labels>
+		<fullName>http_DelayLimit</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_DelayLimit</shortDescription>
+		<value>The retry delay is not within limits [1 - 5000]</value>
+	</labels>
+	<labels>
+		<fullName>http_RetryCountLimit</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_RetryCountLimit</shortDescription>
+		<value>The retry count is not within limits [1 - 10]</value>
+	</labels>
+	<labels>
+		<fullName>http_RedirectionBlank</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_RedirectionBlank</shortDescription>
+		<value>The "Location" header was blank when attempting to redirect</value>
+	</labels>
+	<labels>
+		<fullName>http_RetryLimitReached</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_RetryLimitReached</shortDescription>
+		<value>The retry limit has been reached</value>
+	</labels>
+	<labels>
+		<fullName>http_CalloutLimitReached</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_CalloutLimitReached</shortDescription>
+		<value>The callout limit has been reached</value>
+	</labels>
+	<labels>
+		<fullName>http_CpuLimitReached</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_CpuLimitReached</shortDescription>
+		<value>The cpu limit has been reached</value>
+	</labels>
+	<labels>
+		<fullName>http_CheckResponse</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_CheckResponse</shortDescription>
+		<value>You must call "send" before getting a response</value>
+	</labels>
+	<labels>
+		<fullName>http_SanitizeCachedUrl</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_SanitizeCachedUrl</shortDescription>
+		<value>apikey|password</value>
+	</labels>
+	<labels>
+		<fullName>http_Message</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_Message</shortDescription>
+		<value>{0}:{1} {2}</value>
+	</labels>
+	<labels>
+		<fullName>httpform_KeyOrValueInvalid</fullName>
+		<categories>httpform</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>httpform_KeyOrValueInvalid</shortDescription>
+		<value>The passed in "key" or "value" is invalid</value>
+	</labels>
+	<labels>
+		<fullName>httpform_KeyOrFileOrFileNameInvalid</fullName>
+		<categories>httpform</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>httpform_KeyOrFileOrFileNameInvalid</shortDescription>
+		<value>The passed in "key", "file" or "file name" is invalid</value>
+	</labels>
+	<labels>
+		<fullName>uri_PortInvalid</fullName>
+		<categories>uri</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>uri_PortInvalid</shortDescription>
+		<value>The port is not within limits [1 - 65535]</value>
+	</labels>
+	<labels>
+		<fullName>uri_CharsetBlank</fullName>
+		<categories>uri</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>uri_CharsetBlank</shortDescription>
+		<value>The charset must not be blank</value>
+	</labels>
+	<labels>
+		<fullName>uri_LengthExceeded</fullName>
+		<categories>uri</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>uri_LengthExceeded</shortDescription>
+		<value>The URI has exceeded limits</value>
+	</labels>
+</CustomLabels>
