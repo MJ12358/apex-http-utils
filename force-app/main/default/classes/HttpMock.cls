@@ -1,7 +1,7 @@
 /**
  * Created on Fri Nov 27 2020
  *
- * Copyright (c) 2020 Matt T. Jants
+ * Copyright (c) 2020 Matt Jants
  * All rights reserved.
 
  * Redistribution and use in source and binary forms, with or without modification, 
@@ -26,7 +26,7 @@
  **/
 
 @IsTest
-public class HttpMock implements HttpCalloutMock {
+public class HttpMock implements System.HttpCalloutMock {
 
 	private List<Mock> mocks;
 	private Map<String, StaticResource> staticResourceByEndpoint;
