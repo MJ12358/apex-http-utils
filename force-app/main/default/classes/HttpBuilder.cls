@@ -25,8 +25,6 @@
  *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
-// TODO: check if platform cache is activated in the org
-
 public with sharing class HttpBuilder {
 
 	private System.HttpRequest request;
@@ -34,14 +32,14 @@ public with sharing class HttpBuilder {
 	private Map<String, String> cookieByKey;
 	private Map<String, String> headerByKey;
 	private Boolean cachex = false;
+	private String cachePrefix = 'local.httpbuilder';
+	private Integer cacheTTL = 7200; // seconds
 	private Boolean debug = false;
-	private String jobid;
 	private Integer maxRetries = 3;
 	private Boolean retry = false;
 	private Integer retryCounter = 0;
 	private Integer retryDelay = 1000; // milliseconds
 	private Integer timeout = 10000; // milliseconds
-	private Integer ttl = 7200; // seconds
 
 	public HttpBuilder() {
 		this(new System.HttpRequest());
@@ -49,7 +47,7 @@ public with sharing class HttpBuilder {
 
 	public HttpBuilder(System.HttpRequest request) {
 		if (System.getApplicationReadWriteMode() == ApplicationReadWriteMode.READ_ONLY) {
-			throw new HttpBuilderException(System.Label.Http_ReadOnly);
+			throw new HttpBuilderException(System.Label.http_ReadOnly);
 		}
 		this.request = request;
 		this.cookieByKey = new Map<String, String>();
@@ -99,6 +97,10 @@ public with sharing class HttpBuilder {
 		return patch();
 	}
 
+	public HttpBuilder patch(Map<String, Object> body) {
+		return patch(System.JSON.serialize(body));
+	}
+
 	//* post
 
 	public HttpBuilder post() {
@@ -124,6 +126,10 @@ public with sharing class HttpBuilder {
 			this.request.setBody(body);
 		}
 		return post();
+	}
+
+	public HttpBuilder post(Map<String, Object> body) {
+		return post(System.JSON.serialize(body));
 	}
 
 	//* put
@@ -153,18 +159,22 @@ public with sharing class HttpBuilder {
 		return put();
 	}
 
+	public HttpBuilder put(Map<String, Object> body) {
+		return put(System.JSON.serialize(body));
+	}
+
 	//* generic
 
 	public HttpBuilder method(HttpMethod method) {
 		if (method == null) {
-			throw new HttpBuilderException(System.Label.Http_MethodNull);
+			throw new HttpBuilderException(System.Label.http_MethodNull);
 		}
 		return method(method.name());
 	}
 
 	public HttpBuilder method(String method) {
 		if (String.isBlank(method)) {
-			throw new HttpBuilderException(System.Label.Http_MethodBlank);
+			throw new HttpBuilderException(System.Label.http_MethodInvalid);
 		}
 		this.request.setMethod(method);
 		return this;
@@ -180,8 +190,7 @@ public with sharing class HttpBuilder {
 	}
 
 	public HttpBuilder body(Map<String, Object> body) {
-		body(System.JSON.serialize(body));
-		return this;
+		return body(System.JSON.serialize(body));
 	}
 
 	public HttpBuilder body(String body) {
@@ -221,14 +230,15 @@ public with sharing class HttpBuilder {
 	}
 
 	public HttpBuilder cache(Object value) {
-		if (value != null) {
-			Integer ttl = Integer.valueOf(ttl);
-			if (ttl < 300 || ttl > 172800) {
-				throw new HttpBuilderException(System.Label.Http_CacheLimit);
-			}
-			this.ttl = ttl;
-			cache();
+		if (value == null) {
+			throw new HttpBuilderException(System.Label.http_CacheInvalid);
 		}
+		Integer ttl = Integer.valueOf(value);
+		if (ttl < 300 || ttl > 172800) {
+			throw new HttpBuilderException(System.Label.http_CacheInvalid);
+		}
+		this.cacheTTL = ttl;
+		cache();
 		return this;
 	}
 
@@ -275,7 +285,7 @@ public with sharing class HttpBuilder {
 
 	public HttpBuilder endpoint(String endpoint) {
 		if (String.isBlank(endpoint)) {
-			throw new HttpBuilderException(System.Label.Http_EndpointBlank);
+			throw new HttpBuilderException(System.Label.http_EndpointInvalid);
 		}
 		this.request.setEndpoint(endpoint);
 		return this;
@@ -283,7 +293,7 @@ public with sharing class HttpBuilder {
 
 	public HttpBuilder endpoint(String namedCredential, String endpoint) {
 		if (String.isBlank(namedCredential) || String.isBlank(endpoint)) {
-			throw new HttpBuilderException(System.Label.Http_EndpointBlank);
+			throw new HttpBuilderException(System.Label.http_EndpointInvalid);
 		}
 		return endpoint('callout:' + namedCredential + '/' + endpoint);
 	}
@@ -291,9 +301,13 @@ public with sharing class HttpBuilder {
 	//* header
 
 	public HttpBuilder header(String key, Object value) {
-		if (String.isNotBlank(key) && value != null) {
+		if (String.isBlank(key)) {
+			throw new HttpBuilderException(System.Label.http_HeaderKeyInvalid);
+		}
+		// TODO: remove a header when value is set to null
+		if (value != null) {
 			this.request.setHeader(key, String.valueOf(value));
-			// because of limitations of the HttpRequest class we need to store these ourselves
+			// because of limitations of the System.HttpRequest class we need to store these ourselves
 			this.headerByKey.put(key, String.valueOf(value));
 		}
 		return this;
@@ -308,17 +322,18 @@ public with sharing class HttpBuilder {
 		return this;
 	}
 
-	public Map<String, String> getRequestHeaders() {
-		return this.headerByKey;
-	}
-
 	//* cookie
 
 	public HttpBuilder cookie(String key, Object value) {
-		if (String.isNotBlank(key) && value != null) {
+		if (String.isBlank(key)) {
+			throw new HttpBuilderException(System.Label.http_CookieKeyInvalid);
+		}
+		// TODO: remove a cookie when value is set to null
+		if (value != null) {
 			List<String> results = new List<String>();
 			this.cookieByKey.put(key, String.valueOf(value));
 			for (String cookieKey : this.cookieByKey.keySet()) {
+				// cookies are formatted as "key=value"
 				String cookie = String.format('{0}={1}',
 					new List<Object>{
 						cookieKey,
@@ -327,6 +342,7 @@ public with sharing class HttpBuilder {
 				);
 				results.add(cookie);
 			}
+			// each cookie (when multiple exist) should be separated by "; "
 			header('Cookie', String.join(results, '; '));
 		}
 		return this;
@@ -344,27 +360,29 @@ public with sharing class HttpBuilder {
 	//* timeout
 
 	public HttpBuilder timeout(Object value) {
-		if (value != null) {
-			Integer timeout = Integer.valueOf(value);
-			if (timeout < 1 || timeout > 120000) {
-				throw new HttpBuilderException(System.Label.Http_TimeoutLimit);
-			}
-			this.timeout = timeout;
-			this.request.setTimeout(timeout);
+		if (value == null) {
+			throw new HttpBuilderException(System.Label.http_TimeoutInvalid);
 		}
+		Integer timeout = Integer.valueOf(value);
+		if (timeout < 1 || timeout > 120000) {
+			throw new HttpBuilderException(System.Label.http_TimeoutInvalid);
+		}
+		this.timeout = timeout;
+		this.request.setTimeout(timeout);
 		return this;
 	}
 
 	//* delay
 
 	public HttpBuilder delay(Object value) {
-		if (value != null) {
-			Integer interval = Integer.valueOf(value);
-			if (interval < 1 || interval > 5000) {
-				throw new HttpBuilderException(System.Label.Http_DelayLimit);
-			}
-			this.retryDelay = interval;
+		if (value == null) {
+			throw new HttpBuilderException(System.Label.http_DelayInvalid);
 		}
+		Integer interval = Integer.valueOf(value);
+		if (interval < 1 || interval > 5000) {
+			throw new HttpBuilderException(System.Label.http_DelayInvalid);
+		}
+		this.retryDelay = interval;
 		return this;
 	}
 
@@ -376,18 +394,29 @@ public with sharing class HttpBuilder {
 	}
 
 	public HttpBuilder retry(Object value) {
-		if (value != null) {
-			Integer count = Integer.valueOf(value);
-			if (count < 1 || count > 10) {
-				throw new HttpBuilderException(System.Label.Http_RetryCountLimit);
-			}
-			this.maxRetries = count;
-			retry();
+		if (value == null) {
+			throw new HttpBuilderException(System.Label.http_RetryCountInvalid);
 		}
+		Integer count = Integer.valueOf(value);
+		if (count < 1 || count > 10) {
+			throw new HttpBuilderException(System.Label.http_RetryCountInvalid);
+		}
+		this.maxRetries = count;
+		retry();
 		return this;
 	}
 
-	//* Response methods
+	//* Request returns
+
+	public Map<String, String> getRequestHeaders() {
+		return this.headerByKey;
+	}
+
+	public System.HttpRequest getRequest() {
+		return this.request;
+	}
+
+	//* Response returns
 
 	public String getHeader(String header) {
 		checkResponse();
@@ -410,7 +439,7 @@ public with sharing class HttpBuilder {
 
 	public String getBase64() {
 		checkResponse();
-		return EncodingUtil.base64Encode(this.response.getBodyAsBlob());
+		return System.EncodingUtil.base64Encode(this.response.getBodyAsBlob());
 	}
 
 	public String getBody() {
@@ -438,15 +467,9 @@ public with sharing class HttpBuilder {
 		return this.response.getStatusCode();
 	}
 
-	public String getJobId() {
+	public System.XmlStreamReader getXml() {
 		checkResponse();
-		return this.jobid;
-	}
-
-	//* Request and response returns
-
-	public System.HttpRequest getRequest() {
-		return this.request;
+		return this.response.getXmlStreamReader();
 	}
 
 	public System.HttpResponse getResponse() {
@@ -459,10 +482,9 @@ public with sharing class HttpBuilder {
 		return this.request;
 	}
 
-	// TODO: get your exceptions in order
 	public HttpBuilder send() {
 
-		if (this.cachex) {
+		if (this.cachex && hasCache()) {
 			Object value = Cache.Org.get(getCacheString());
 			if (value != null) {
 				this.response = new System.HttpResponse();
@@ -475,7 +497,6 @@ public with sharing class HttpBuilder {
 		System.Http http = new System.Http();
 
 		// salesforce throws a callout exception
-		// TODO: account for remote site setting issue (CalloutException)
 		try {
 			this.response = http.send(this.request);
 		} catch (System.CalloutException e) {
@@ -495,17 +516,16 @@ public with sharing class HttpBuilder {
 			debugThis();
 		}
 
-		if (this.cachex) {
-			Cache.Org.put(getCacheString(), getBody(), this.ttl);
+		if (this.cachex && hasCache()) {
+			Cache.Org.put(getCacheString(), getBody(), this.cacheTTL);
 		}
 
 		return this;
 	}
 
 /**
- *	Status codes as defined by RFC 2616 (1999) and RFC 7231 (2014)
+ *	Validate status codes as defined by RFC 2616 (1999) and RFC 7231 (2014)
  */
-
 	private void validateResponse() {
 		Integer statusCode = this.response.getStatusCode();
 
@@ -582,7 +602,7 @@ public with sharing class HttpBuilder {
 		checkLimits();
 		String newEndpoint = getHeader('Location');
 		if (String.isBlank(newEndpoint)) {
-			throw new HttpBuilderException(System.Label.Http_RedirectionBlank);
+			throw new HttpBuilderException(System.Label.http_RedirectionInvalid);
 		}
 		endpoint(newEndpoint);
 		send();
@@ -601,18 +621,32 @@ public with sharing class HttpBuilder {
 
 	//* Utility methods
 
+	private Boolean hasCache() {
+		try {
+			// use a fake key to determine if the org has platform cache enabled
+			Cache.Org.get(this.cachePrefix + '.0');
+		} catch (Cache.Org.OrgCacheException e) {
+			// TODO: determine whether logging or throwing is good
+			//	when throwing, tests must be able to handle this
+			// throw new HttpBuilderException(System.Label.http_CacheUnavailable);
+			System.debug(System.LoggingLevel.WARN, System.Label.http_CacheUnavailable);
+			return false;
+		}
+		return true;
+	}
+
 	private void checkLimits() {
 		if (System.Limits.getCallouts() >= System.Limits.getLimitCallouts()) {
-			throw new HttpBuilderException(System.Label.Http_CalloutLimitReached);
+			throw new HttpBuilderException(System.Label.http_CalloutLimitReached);
 		}
 		if (System.Limits.getCpuTime() >= System.Limits.getLimitCpuTime()) {
-			throw new HttpBuilderException(System.Label.Http_CpuLimitReached);
+			throw new HttpBuilderException(System.Label.http_CpuLimitReached);
 		}
 	}
 
 	private void checkResponse() {
 		if (this.response == null) {
-			throw new HttpBuilderException(System.Label.Http_CheckResponse);
+			throw new HttpBuilderException(System.Label.http_CheckResponse);
 		}
 	}
 
@@ -635,11 +669,16 @@ public with sharing class HttpBuilder {
 			}
 		}
 		// cache keys can only contain alphanumeric chars
-		return 'local.httpbuilder.' + pageRef.getUrl().replaceAll('[^a-zA-Z0-9]', '').right(50);
+		return String.format('{0}.{1}',
+			new List<String>{
+				this.cachePrefix,
+				pageRef.getUrl().replaceAll('[^a-zA-Z0-9]', '').right(50)
+			}
+		);
 	}
 
 	private String formatMessage(String msg) {
-		return String.format(System.Label.Http_Message,
+		return String.format(System.Label.http_Message,
 			new List<Object>{
 				this.response.getStatusCode(),
 				this.response.getStatus(),
