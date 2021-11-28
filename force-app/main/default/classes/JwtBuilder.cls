@@ -25,6 +25,10 @@
  *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
+/**
+ *	Heavily influnced by https://github.com/salesforceidentity/jwt
+ */
+
 public with sharing class JwtBuilder {
 
 	// RFC 7519 (2015)
@@ -37,22 +41,26 @@ public with sharing class JwtBuilder {
 	private String certName;
 	private String privateKey;
 
-	public JwtBuilder(Algorithm algorithm) {
+	public JwtBuilder() {
 		this.headerClaims = new Map<String, Object>();
 		this.payloadClaims = new Map<String, Object>();
 		this.now = (Datetime.now().getTime() / 1000) + 1;
-		sign(algorithm);
 		// default claims
 		issuedAt(this.now);
 		notBefore(this.now);
 		type('JWT');
 	}
 
+	public JwtBuilder(Algorithm algorithm) {
+		this();
+		sign(algorithm);
+	}
+
 	//* Header claims
 
 	public JwtBuilder sign(Algorithm value) {
 		if (value == null) {
-			throw new JwtBuilderException(System.Label.jwt_AlgorithmBlank);
+			throw new JwtBuilderException(System.Label.jwt_AlgorithmInvalid);
 		}
 		this.algorithm = value;
 		this.headerClaims.put('alg', value.name());
@@ -61,7 +69,7 @@ public with sharing class JwtBuilder {
 
 	public JwtBuilder type(Object value) {
 		if (value == null) {
-			throw new JwtBuilderException(System.Label.jwt_TypeBlank);
+			throw new JwtBuilderException(System.Label.jwt_TypeInvalid);
 		}
 		this.headerClaims.put('typ', value);
 		return this;
@@ -144,7 +152,7 @@ public with sharing class JwtBuilder {
 
 	public JwtBuilder cert(String certDevName) {
 		if (String.isBlank(certDevName)) {
-			throw new JwtBuilderException(System.Label.jwt_CertificateBlank);
+			throw new JwtBuilderException(System.Label.jwt_CertificateInvalid);
 		}
 		this.certName = certDevName;
 		return this;
@@ -152,12 +160,21 @@ public with sharing class JwtBuilder {
 
 	public JwtBuilder key(String keyContents) {
 		if (String.isBlank(keyContents)) {
-			throw new JwtBuilderException(System.Label.jwt_PrivateKeyBlank);
+			throw new JwtBuilderException(System.Label.jwt_PrivateKeyInvalid);
 		}
-		this.privateKey = keyContents.replace('-----BEGIN RSA PRIVATE KEY-----', '')
+		this.privateKey = keyContents
+			.replace('-----BEGIN RSA PRIVATE KEY-----', '')
 			.replace('-----END RSA PRIVATE KEY-----', '')
 			.replace('\n', '');
 		return this;
+	}
+
+	public JwtBuilder keyFromResource(String name) {
+		if (String.isBlank(name)) {
+			throw new JwtBuilderException(System.Label.jwt_KeyResourceNameInvalid);
+		}
+		StaticResource sr = [SELECT Body FROM StaticResource WHERE Name = :name LIMIT 1];
+		return key(sr.Body.toString());
 	}
 
 	//* Generic claim methods
@@ -201,7 +218,7 @@ public with sharing class JwtBuilder {
 		payload.writeEndObject();
 		encodedPayload = base64URLencode(Blob.valueOf(payload.getAsString()));
 
-		// generate the jwt signature
+		// generate the jwt body
 		Blob body = Blob.valueOf(String.format('{0}.{1}',
 			new List<String>{
 				encodedHeader,
@@ -213,24 +230,25 @@ public with sharing class JwtBuilder {
 			// HMAC with SHA-256
 			when HS256 {
 				if (String.isBlank(this.privateKey)) {
-					throw new JwtBuilderException(System.Label.jwt_HS256PrivateKeyBlank);
+					throw new JwtBuilderException(System.Label.jwt_HS256PrivateKeyInvalid);
 				}
-				Blob key = EncodingUtil.base64Decode(this.privateKey);
-				signature = Crypto.generateMac('hmacSHA256', body, key);
+				Blob key = System.EncodingUtil.base64Decode(this.privateKey);
+				signature = System.Crypto.generateMac('hmacSHA256', body, key);
 			}
 			// RSASSA-PKCS1-v1_5 with SHA-256
 			when RS256 {
 				if (String.isNotBlank(this.certName)) {
-					signature = Crypto.signWithCertificate('rsa-sha256', body, this.certName);
+					signature = System.Crypto.signWithCertificate('rsa-sha256', body, this.certName);
 				} else if (String.isNotBlank(this.privateKey)) {
-					Blob key = EncodingUtil.base64Decode(this.privateKey);
-					signature = Crypto.sign('rsa-sha256', body, key);
+					Blob key = System.EncodingUtil.base64Decode(this.privateKey);
+					signature = System.Crypto.sign('rsa-sha256', body, key);
 				} else {
-					throw new JwtBuilderException(System.Label.jwt_RS256CertOrKeyBlank);
+					throw new JwtBuilderException(System.Label.jwt_RS256CertOrKeyInvalid);
 				}
 			}
 			when else {
-				throw new JwtBuilderException(System.Label.jwt_AlgorithmNotImplemented);
+				// no algorithm was given so nothing to do
+				//	this is valid if the server does not require signing
 			}
 		}
 
@@ -243,11 +261,30 @@ public with sharing class JwtBuilder {
 		);
 	}
 
+	public String getBody() {
+		return String.format('grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion={0}',
+			new List<String>{
+				build()
+			}
+		);
+	}
+
+	public String getAccessToken(String endpoint) {
+		HttpBuilder builder = new HttpBuilder()
+			.endpoint(endpoint)
+			.body(getBody())
+			.method(HttpMethod.POST)
+			.header('Content-Type', 'application/x-www-form-urlencoded')
+			.send();
+		Response response = (Response)System.JSON.deserialize(builder.getBody(), Response.class);
+		return response.access_token;
+	}
+
 	//* Private methods
 	
 	private void addClaim(String name, Object value) {
 		if (String.isBlank(name)) {
-			throw new JwtBuilderException('The claim\'s name must not be blank');
+			throw new JwtBuilderException(System.Label.jwt_ClaimNameInvalid);
 		}
 		if (value == null) {
 			this.payloadClaims.remove(name);
@@ -257,8 +294,10 @@ public with sharing class JwtBuilder {
 	}
 
 	private String base64URLencode(Blob input) {
-		if (input == null) return '';
-		String output = EncodingUtil.base64Encode(input);
+		if (input == null || input.size() == 0) {
+			return '';
+		}
+		String output = System.EncodingUtil.base64Encode(input);
 		output = output.replace('+', '-');
 		output = output.replace('/', '_');
 		while (output.endsWith('=')) {
@@ -267,6 +306,16 @@ public with sharing class JwtBuilder {
 		return output;
 	}
 
+/**
+ *	A generic class used to parse the response from a bearer
+ */
+	private class Response {
+		public String access_token;
+	}
+
+/**
+ *	An emum to represent the algorithm used to sign the jwt
+ */
 	public enum Algorithm {
 		HS256,
 		RS256
