@@ -46,8 +46,11 @@ public class HttpFormBuilder {
 	//* Public methods
 
 	public HttpFormBuilder put(String key, Object value) {
-		if (String.isBlank(key) || value == null) {
-			throw new HttpFormBuilderException(System.Label.httpform_KeyOrValueInvalid);
+		if (String.isBlank(key)) {
+			throw new HttpFormBuilderException(System.Label.httpform_KeyInvalid);
+		}
+		if (value == null) {
+			throw new HttpFormBuilderException(System.Label.httpform_ValueInvalid);
 		}
 		this.body += writeBoundary();
 		this.body += writeBodyParameter(key, String.valueOf(value));
@@ -55,14 +58,25 @@ public class HttpFormBuilder {
 		return this;
 	}
 
-	public HttpFormBuilder put(String key, String file64, String fileName) {
-		if (String.isBlank(key) || String.isBlank(file64) || String.isBlank(fileName)) {
-			throw new HttpFormBuilderException(System.Label.httpform_KeyOrFileOrFileNameInvalid);
+	public HttpFormBuilder put(String key, String file64, String filename) {
+		if (String.isBlank(key)) {
+			throw new HttpFormBuilderException(System.Label.httpform_KeyInvalid);
+		}
+		if (String.isBlank(file64)) {
+			throw new HttpFormBuilderException(System.Label.httpform_FileInvalid);
+		}
+		if (String.isBlank(filename)) {
+			throw new HttpFormBuilderException(System.Label.httpform_FilenameInvalid);
 		}
 		this.body += writeBoundary();
-		this.body += writeBodyParameter(key, file64, fileName);
+		this.body += writeBodyParameter(key, file64, filename);
 		this.params.put(key, file64);
 		return this;
+	}
+
+	public HttpFormBuilder put(String key, Blob fileBlob, String filename) {
+		String file64 = System.EncodingUtil.base64Encode(fileBlob);
+		return put(key, file64, filename);
 	}
 
 	public Object get(String key) {
@@ -71,7 +85,7 @@ public class HttpFormBuilder {
 
 	public Blob build() {
 		this.body += writeBoundary(EndingType.CrLf);
-		return EncodingUtil.base64Decode(this.body);
+		return System.EncodingUtil.base64Decode(this.body);
 	}
 
 	public String getContentDisposition(String key) {
@@ -90,7 +104,7 @@ public class HttpFormBuilder {
 	private String writeBoundary() {
 		String value = '--' + BOUNDARY + this.CRLF;
 		Blob valueBlob = Blob.valueOf(value);
-		return EncodingUtil.base64Encode(valueBlob);
+		return System.EncodingUtil.base64Encode(valueBlob);
 	}
 
 /**
@@ -121,7 +135,7 @@ public class HttpFormBuilder {
 
 		Blob valueBlob = Blob.valueOf(value);
 
-		return EncodingUtil.base64Encode(valueBlob);
+		return System.EncodingUtil.base64Encode(valueBlob);
 	}
 
 /**
@@ -131,11 +145,11 @@ public class HttpFormBuilder {
 		String contentDisposition = getContentDisposition(key);
 		String contentDispositionCrLf = contentDisposition + this.CRLF + this.CRLF;
 		Blob contentDispositionCrLfBlob = Blob.valueOf(contentDispositionCrLf);
-		String contentDispositionCrLf64 = EncodingUtil.base64Encode(contentDispositionCrLfBlob);
+		String contentDispositionCrLf64 = System.EncodingUtil.base64Encode(contentDispositionCrLfBlob);
 		String content = safelyPad(contentDisposition, contentDispositionCrLf64, this.CRLF + this.CRLF);
 		String valueCrLf = value + this.CRLF;
 		Blob valueCrLfBlob = Blob.valueOf(valueCrLf);
-		String valueCrLf64 = EncodingUtil.base64Encode(valueCrLfBlob);
+		String valueCrLf64 = System.EncodingUtil.base64Encode(valueCrLfBlob);
 
 		content += safelyPad(value, valueCrLf64, this.CRLF);
 
@@ -143,24 +157,24 @@ public class HttpFormBuilder {
 	}
 	
 /**
- *  Write a key-value pair to the form's body for a Blob.
+ *  Write a key-value pair to the form's body for a file.
  */
-	private String writeBodyParameter(String key, String file64, String fileName) {
+	private String writeBodyParameter(String key, String file64, String filename) {
 		
 		// TODO: mimeType
-		// String mimeType = FileUtil.getMimeType(fileName);
+		// String mimeType = FileUtil.getMimeType(filename);
 		String mimeType = 'mimeType';
 		
-		String contentDisposition = getContentDisposition(key) + '; filename="' + fileName + '"';
+		String contentDisposition = getContentDisposition(key) + '; filename="' + filename + '"';
 		String contentDispositionCrLf = contentDisposition + this.CRLF;
 		Blob contentDispositionCrLfBlob = Blob.valueOf(contentDispositionCrLf);
-		String contentDispositionCrLf64 = EncodingUtil.base64Encode(contentDispositionCrLfBlob);
+		String contentDispositionCrLf64 = System.EncodingUtil.base64Encode(contentDispositionCrLfBlob);
 		String content = safelyPad(contentDisposition, contentDispositionCrLf64, this.CRLF);
 		
 		String contentTypeHeader = 'Content-Type: ' + mimeType;
 		String contentTypeCrLf = contentTypeHeader + this.CRLF + this.CRLF;
 		Blob contentTypeCrLfBlob = Blob.valueOf(contentTypeCrLf);
-		String contentTypeCrLf64 = EncodingUtil.base64Encode(contentTypeCrLfBlob);
+		String contentTypeCrLf64 = System.EncodingUtil.base64Encode(contentTypeCrLfBlob);
 		content += safelyPad(contentTypeHeader, contentTypeCrLf64, this.CRLF + this.CRLF);
 		
 		Integer file64Length = file64.length();
@@ -218,7 +232,7 @@ public class HttpFormBuilder {
 			value += ' ';
 			valueCrLf = value + lineBreaks;
 			valueCrLfBlob = Blob.valueOf(valueCrLf);
-			valueCrLf64 = EncodingUtil.base64Encode(valueCrLfBlob);
+			valueCrLf64 = System.EncodingUtil.base64Encode(valueCrLfBlob);
 		}
 
 		return valueCrLf64;
