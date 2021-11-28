@@ -1,68 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
 	<labels>
-		<fullName>jwt_AlgorithmBlank</fullName>
+		<fullName>jwt_AlgorithmInvalid</fullName>
 		<categories>jwt</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>jwt_AlgorithmBlank</shortDescription>
-		<value>Algorithm must not be blank</value>
+		<shortDescription>jwt_AlgorithmInvalid</shortDescription>
+		<value>The algorithm must not be blank.</value>
 	</labels>
 	<labels>
-		<fullName>jwt_TypeBlank</fullName>
+		<fullName>jwt_TypeInvalid</fullName>
 		<categories>jwt</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>jwt_TypeBlank</shortDescription>
-		<value>Type must not be blank</value>
+		<shortDescription>jwt_TypeInvalid</shortDescription>
+		<value>The type must not be blank.</value>
 	</labels>
 	<labels>
 		<fullName>jwt_ExpirationInvalid</fullName>
 		<categories>jwt</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>jwt_TypeBlank</shortDescription>
-		<value>Expiration must be after the current date/time</value>
+		<shortDescription>jwt_ExpirationInvalid</shortDescription>
+		<value>The expiration must be after the current date/time.</value>
 	</labels>
 	<labels>
-		<fullName>jwt_CertificateBlank</fullName>
+		<fullName>jwt_CertificateInvalid</fullName>
 		<categories>jwt</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>jwt_CertificateBlank</shortDescription>
-		<value>Certificate name must not be blank</value>
+		<shortDescription>jwt_CertificateInvalid</shortDescription>
+		<value>The certificate name must not be blank.</value>
 	</labels>
 	<labels>
-		<fullName>jwt_PrivateKeyBlank</fullName>
+		<fullName>jwt_PrivateKeyInvalid</fullName>
 		<categories>jwt</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>jwt_PrivateKeyBlank</shortDescription>
-		<value>Private key must not be blank</value>
+		<shortDescription>jwt_PrivateKeyInvalid</shortDescription>
+		<value>Private key must not be blank.</value>
 	</labels>
 	<labels>
-		<fullName>jwt_HS256PrivateKeyBlank</fullName>
+		<fullName>jwt_KeyResourceNameInvalid</fullName>
 		<categories>jwt</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>jwt_HS256PrivateKeyBlank</shortDescription>
-		<value>When using HS256 the "key" must not be blank</value>
+		<shortDescription>jwt_KeyResourceNameInvalid</shortDescription>
+		<value>The private key resource name must not be blank.</value>
 	</labels>
 	<labels>
-		<fullName>jwt_RS256CertOrKeyBlank</fullName>
+		<fullName>jwt_HS256PrivateKeyInvalid</fullName>
 		<categories>jwt</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>jwt_RS256CertOrKeyBlank</shortDescription>
-		<value>When using RS256 the "cert" or "key" must not be blank</value>
+		<shortDescription>jwt_HS256PrivateKeyInvalid</shortDescription>
+		<value>When using HS256 the "key" must not be blank.</value>
 	</labels>
 	<labels>
-		<fullName>jwt_AlgorithmNotImplemented</fullName>
+		<fullName>jwt_RS256CertOrKeyInvalid</fullName>
 		<categories>jwt</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>jwt_AlgorithmNotImplemented</shortDescription>
-		<value>The algorithm given has not been implemented</value>
+		<shortDescription>jwt_RS256CertOrKeyInvalid</shortDescription>
+		<value>When using RS256 the "cert" or "key" must not be blank.</value>
+	</labels>
+	<labels>
+		<fullName>jwt_ClaimNameInvalid</fullName>
+		<categories>jwt</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>jwt_ClaimNameInvalid</shortDescription>
+		<value>The claim's "name" must not be blank.</value>
 	</labels>
 	<labels>
 		<fullName>http_ReadOnly</fullName>
@@ -70,7 +78,7 @@
 		<language>en_US</language>
 		<protected>false</protected>
 		<shortDescription>http_ReadOnly</shortDescription>
-		<value>Callouts cannot be made when the application/organization is in read only mode</value>
+		<value>Callouts cannot be made when the application/organization is in read only mode.</value>
 	</labels>
 	<labels>
 		<fullName>http_MethodNull</fullName>
@@ -78,63 +86,87 @@
 		<language>en_US</language>
 		<protected>false</protected>
 		<shortDescription>http_MethodNull</shortDescription>
-		<value>The http method must not be null</value>
+		<value>The http method must not be null.</value>
 	</labels>
 	<labels>
-		<fullName>http_MethodBlank</fullName>
+		<fullName>http_MethodInvalid</fullName>
 		<categories>http</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>http_MethodBlank</shortDescription>
-		<value>The http method must not be blank</value>
+		<shortDescription>http_MethodInvalid</shortDescription>
+		<value>The http method must not be blank.</value>
 	</labels>
 	<labels>
-		<fullName>http_CacheLimit</fullName>
+		<fullName>http_HeaderKeyInvalid</fullName>
 		<categories>http</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>http_CacheLimit</shortDescription>
-		<value>The ttl given is not within limits [300 - 172800]</value>
+		<shortDescription>http_HeaderKeyInvalid</shortDescription>
+		<value>The header key must not be blank.</value>
 	</labels>
 	<labels>
-		<fullName>http_EndpointBlank</fullName>
+		<fullName>http_CookieKeyInvalid</fullName>
 		<categories>http</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>http_EndpointBlank</shortDescription>
-		<value>The endpoint must not be blank</value>
+		<shortDescription>http_CookieKeyInvalid</shortDescription>
+		<value>The cookie key must not be blank.</value>
 	</labels>
 	<labels>
-		<fullName>http_TimeoutLimit</fullName>
+		<fullName>http_CacheInvalid</fullName>
 		<categories>http</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>http_TimeoutLimit</shortDescription>
-		<value>The timeout is not within limits [1 - 120000]</value>
+		<shortDescription>http_CacheInvalid</shortDescription>
+		<value>The cache ttl given is not within limits [300 - 172800].</value>
 	</labels>
 	<labels>
-		<fullName>http_DelayLimit</fullName>
+		<fullName>http_CacheUnavailable</fullName>
 		<categories>http</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>http_DelayLimit</shortDescription>
-		<value>The retry delay is not within limits [1 - 5000]</value>
+		<shortDescription>http_CacheUnavailable</shortDescription>
+		<value>Organization cache is not available, please setup cache or ignore this warning.</value>
 	</labels>
 	<labels>
-		<fullName>http_RetryCountLimit</fullName>
+		<fullName>http_EndpointInvalid</fullName>
 		<categories>http</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>http_RetryCountLimit</shortDescription>
-		<value>The retry count is not within limits [1 - 10]</value>
+		<shortDescription>http_EndpointInvalid</shortDescription>
+		<value>The endpoint must not be blank.</value>
 	</labels>
 	<labels>
-		<fullName>http_RedirectionBlank</fullName>
+		<fullName>http_TimeoutInvalid</fullName>
 		<categories>http</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>http_RedirectionBlank</shortDescription>
-		<value>The "Location" header was blank when attempting to redirect</value>
+		<shortDescription>http_TimeoutInvalid</shortDescription>
+		<value>The timeout duration is not within limits [1 - 120000].</value>
+	</labels>
+	<labels>
+		<fullName>http_DelayInvalid</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_DelayInvalid</shortDescription>
+		<value>The retry delay is not within limits [1 - 5000].</value>
+	</labels>
+	<labels>
+		<fullName>http_RetryCountInvalid</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_RetryCountInvalid</shortDescription>
+		<value>The retry count is not within limits [1 - 10].</value>
+	</labels>
+	<labels>
+		<fullName>http_RedirectionInvalid</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_RedirectionInvalid</shortDescription>
+		<value>The "Location" header was blank when attempting to redirect.</value>
 	</labels>
 	<labels>
 		<fullName>http_RetryLimitReached</fullName>
@@ -142,7 +174,7 @@
 		<language>en_US</language>
 		<protected>false</protected>
 		<shortDescription>http_RetryLimitReached</shortDescription>
-		<value>The retry limit has been reached</value>
+		<value>The retry limit has been reached.</value>
 	</labels>
 	<labels>
 		<fullName>http_CalloutLimitReached</fullName>
@@ -150,7 +182,7 @@
 		<language>en_US</language>
 		<protected>false</protected>
 		<shortDescription>http_CalloutLimitReached</shortDescription>
-		<value>The callout limit has been reached</value>
+		<value>The callout limit has been reached.</value>
 	</labels>
 	<labels>
 		<fullName>http_CpuLimitReached</fullName>
@@ -158,7 +190,7 @@
 		<language>en_US</language>
 		<protected>false</protected>
 		<shortDescription>http_CpuLimitReached</shortDescription>
-		<value>The cpu limit has been reached</value>
+		<value>The cpu limit has been reached.</value>
 	</labels>
 	<labels>
 		<fullName>http_CheckResponse</fullName>
@@ -166,7 +198,7 @@
 		<language>en_US</language>
 		<protected>false</protected>
 		<shortDescription>http_CheckResponse</shortDescription>
-		<value>You must call "send" before getting a response</value>
+		<value>You must call "send" before getting a response.</value>
 	</labels>
 	<labels>
 		<fullName>http_SanitizeCachedUrl</fullName>
@@ -182,23 +214,63 @@
 		<language>en_US</language>
 		<protected>false</protected>
 		<shortDescription>http_Message</shortDescription>
-		<value>{0}:{1} {2}</value>
+		<value>{0}:{1} {2}.</value>
 	</labels>
 	<labels>
-		<fullName>httpform_KeyOrValueInvalid</fullName>
+		<fullName>http_ResourceNameDoesNotExist</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_ResourceNameDoesNotExist</shortDescription>
+		<value>The static resource given does not exist: {0}.</value>
+	</labels>
+	<labels>
+		<fullName>http_ResourceEndpointDoesNotExist</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_ResourceEndpointDoesNotExist</shortDescription>
+		<value>The static resource given does not exist: {0} :: {1}.</value>
+	</labels>
+	<labels>
+		<fullName>http_NoMockCreated</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>http_NoMockCreated</shortDescription>
+		<value>There was no mock created for this callout: {0}.</value>
+	</labels>
+	<labels>
+		<fullName>httpform_KeyInvalid</fullName>
 		<categories>httpform</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>httpform_KeyOrValueInvalid</shortDescription>
-		<value>The passed in "key" or "value" is invalid</value>
+		<shortDescription>httpform_KeyInvalid</shortDescription>
+		<value>The "key" must not be blank.</value>
 	</labels>
 	<labels>
-		<fullName>httpform_KeyOrFileOrFileNameInvalid</fullName>
+		<fullName>httpform_ValueInvalid</fullName>
 		<categories>httpform</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>httpform_KeyOrFileOrFileNameInvalid</shortDescription>
-		<value>The passed in "key", "file" or "file name" is invalid</value>
+		<shortDescription>httpform_ValueInvalid</shortDescription>
+		<value>The passed in "value" is invalid.</value>
+	</labels>
+	<labels>
+		<fullName>httpform_FileInvalid</fullName>
+		<categories>httpform</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>httpform_FileInvalid</shortDescription>
+		<value>The "file" must not be blank.</value>
+	</labels>
+	<labels>
+		<fullName>httpform_FilenameInvalid</fullName>
+		<categories>httpform</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>httpform_FilenameInvalid</shortDescription>
+		<value>The "filename" must not be blank.</value>
 	</labels>
 	<labels>
 		<fullName>uri_PortInvalid</fullName>
@@ -206,15 +278,15 @@
 		<language>en_US</language>
 		<protected>false</protected>
 		<shortDescription>uri_PortInvalid</shortDescription>
-		<value>The port is not within limits [1 - 65535]</value>
+		<value>The port is not within limits [1 - 65535].</value>
 	</labels>
 	<labels>
-		<fullName>uri_CharsetBlank</fullName>
+		<fullName>uri_CharsetInvalid</fullName>
 		<categories>uri</categories>
 		<language>en_US</language>
 		<protected>false</protected>
-		<shortDescription>uri_CharsetBlank</shortDescription>
-		<value>The charset must not be blank</value>
+		<shortDescription>uri_CharsetInvalid</shortDescription>
+		<value>The charset must not be blank.</value>
 	</labels>
 	<labels>
 		<fullName>uri_LengthExceeded</fullName>
@@ -222,6 +294,6 @@
 		<language>en_US</language>
 		<protected>false</protected>
 		<shortDescription>uri_LengthExceeded</shortDescription>
-		<value>The URI has exceeded limits</value>
+		<value>The URI has exceeded limits.</value>
 	</labels>
 </CustomLabels>
