@@ -105,7 +105,7 @@ public class HttpMock implements System.HttpCalloutMock {
 			}
 			getCurrent().setBody(sr.Body.toString());
 		} catch (System.QueryException e) {
-			e.setMessage('The static resource given does not exist: ' + name);
+			e.setMessage(String.format(System.Label.http_ResourceNameDoesNotExist, new String[]{name}));
 			throw e;
 		}
 		return this;
@@ -126,7 +126,7 @@ public class HttpMock implements System.HttpCalloutMock {
 			}
 			getCurrent().setBody(sr.Body.toString());
 		} catch (System.QueryException e) {
-			e.setMessage('The static resource given does not exist: ' + name + ' :: ' + endpoint);
+			e.setMessage(String.format(System.Label.http_ResourceEndpointDoesNotExist, new String[]{name, endpoint}));
 			throw e;
 		}
 		return this;
@@ -153,10 +153,9 @@ public class HttpMock implements System.HttpCalloutMock {
 					response.setBody(sr.Body.toString());
 				}
 			}
-			// Log.http(request, response);
 			return response;
 		} catch (System.ListException e) {
-			e.setMessage('There was no mock created for this callout: ' + request.getEndpoint());
+			e.setMessage(String.format(System.Label.http_NoMockCreated, new String[]{request.getEndpoint()}));
 			throw e;
 		}
 	}
