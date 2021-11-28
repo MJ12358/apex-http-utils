@@ -1,8 +1,8 @@
 {
-  "name": "salesforce-app",
+  "name": "apex-http-utils",
   "private": true,
   "version": "1.0.0",
-  "description": "Salesforce App",
+  "description": "Apex Http Utilities",
   "scripts": {
     "lint": "eslint **/{aura,lwc}/**",
     "test": "npm run test:unit",
