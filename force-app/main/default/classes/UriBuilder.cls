@@ -40,8 +40,6 @@ public with sharing class UriBuilder {
 	private String charset;
 	private Boolean encode = false;
 
-	//* Constructors
-
 	public UriBuilder() {
 		this.paths = new List<String>();
 		this.queries = new Map<String, Object>();
@@ -52,7 +50,7 @@ public with sharing class UriBuilder {
 		this.baseUri = baseUri;
 	}
 
-	//* Builder methods
+	//* Public methods
 
 	public UriBuilder scheme(String scheme) {
 		this.scheme = scheme;
@@ -79,33 +77,33 @@ public with sharing class UriBuilder {
 		return this;
 	}
 
-	public UriBuilder addPath(Object value) {
+	public UriBuilder path(Object value) {
 		if (value != null) {
 			this.paths.add(value);
 		}
 		return this;
 	}
 
-	public UriBuilder addPath(List<Object> values) {
+	public UriBuilder path(List<Object> values) {
 		if (values != null) {
 			for (Object value : values) {
-				addPath(value);
+				path(value);
 			}
 		}
 		return this;
 	}
 
-	public UriBuilder addQuery(String key, Object value) {
+	public UriBuilder query(String key, Object value) {
 		if (String.isNotBlank(key) && value != null) {
 			this.queries.put(key, value);
 		}
 		return this;
 	}
 
-	public UriBuilder addQuery(Map<String, Object> values) {
+	public UriBuilder query(Map<String, Object> values) {
 		if (values != null) {
 			for (String key : values.keySet()) {
-				addQuery(key, values.get(key));
+				query(key, values.get(key));
 			}
 		}
 		return this;
@@ -122,7 +120,7 @@ public with sharing class UriBuilder {
 
 	public UriBuilder encode(String charset) {
 		if (String.isBlank(charset)) {
-			throw new UriBuilderException(System.Label.uri_CharsetBlank);
+			throw new UriBuilderException(System.Label.uri_CharsetInvalid);
 		}
 		this.encode = true;
 		this.charset = charset;
@@ -158,22 +156,22 @@ public with sharing class UriBuilder {
 			result += '/' + String.valueOf(path);
 		}
 
-		// build queries
-		for (String query : this.queries.keySet()) {
-			result += getDelimiter(count) + query + '=' + String.valueOf(this.queries.get(query));
+		// build queries eg. ?key=value or &key=value
+		for (String key : this.queries.keySet()) {
+			String value = String.valueOf(this.queries.get(key));
+			result += String.format('{0}{1}={2}',
+				new List<String>{
+					getDelimiter(count),
+					key,
+					this.encode ? urlEncode(value) : value
+				}
+			);
 			count++;
 		}
 
 		// add fragment
 		if (String.isNotBlank(this.fragment)) {
 			result += '#' + this.fragment;
-		}
-
-		// encode it
-		// TODO: you should only encode the values of the queries not the whole uri
-		if (this.encode) {
-			// this produces a result that cannot be directly utilized as a url
-			result = EncodingUtil.urlEncode(result, this.charset).replaceAll('\\+', '%20');
 		}
 
 		// Most web servers limit to 8192
@@ -186,9 +184,17 @@ public with sharing class UriBuilder {
 		return result;
 	}
 
-	//* Utility methods
+	//* Private methods
 
 	private String getDelimiter(Integer count) {
 		return count == 0 ? '?' : '&';
+	}
+
+	// TODO: verify these are correct
+	private String urlEncode(String value) {
+		return System.EncodingUtil.urlEncode(value, this.charset)
+			.replaceAll('\\+', '%20')
+			.replaceAll('\\*', '%2A')
+			.replaceAll('\\%7E', '~');
 	}
 }
