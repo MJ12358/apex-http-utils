@@ -31,7 +31,7 @@ public class HttpFormBuilderTest {
 		Blob value = Blob.valueOf('ABCDEFG123456');
 		Test.startTest();
 		HttpFormBuilder builder = new HttpFormBuilder();
-		builder.put('key1', EncodingUtil.base64Encode(value), 'filename.txt');
+		builder.put('key1', System.EncodingUtil.base64Encode(value), 'filename.txt');
 		Blob result = builder.build();
 		Test.stopTest();
 		System.assertNotEquals(null, result);
