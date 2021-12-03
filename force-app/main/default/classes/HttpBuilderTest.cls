@@ -16,12 +16,11 @@ public class HttpBuilderTest {
 	static void testDebug() {
 		Test.startTest();
 		new HttpBuilder().endpoint(endpoint)
-			.debug(true)
+			.debug()
 			.get()
 			.send();
-		Test.getEventBus().deliver();
 		Test.stopTest();
-		// System.assertEquals(1, [SELECT Count() FROM LogRecord__c]);
+		System.assertEquals(1, [SELECT Count() FROM HttpLog__c]);
 	}
 
 	@IsTest
@@ -48,18 +47,6 @@ public class HttpBuilderTest {
 		System.assertEquals(endpoint, req.getEndpoint());
 		System.assertEquals('GET', req.getMethod());
 	}
-
-	// @IsTest
-	// static void testGetResponse() {
-	// 	Test.startTest();
-	// 	System.HttpResponse res = new HttpBuilder().endpoint(endpoint)
-	// 		.get()
-	// 		.retryAfter(Decimal.valueOf(800))
-	// 		.send()
-	// 		.getResponse();
-	// 	Test.stopTest();
-	// 	System.assertNotEquals(null, res);
-	// }
 
 	@IsTest
 	static void testDelete() {

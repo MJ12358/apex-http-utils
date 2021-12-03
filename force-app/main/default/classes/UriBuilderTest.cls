@@ -20,14 +20,6 @@ public class UriBuilderTest {
 	}
 
 	@IsTest
-	static void testBasicEncode() {
-		Test.startTest();
-		String result = new UriBuilder().scheme('https').host('example.com').encode().build();
-		Test.stopTest();
-		System.assertEquals('https%3A%2F%2Fexample.com', result);
-	}
-
-	@IsTest
 	static void testComplex() {
 		Map<String, Object> query = new Map<String, Object>{'pid' => 456};
 		Test.startTest();
@@ -36,9 +28,9 @@ public class UriBuilderTest {
 			.userinfo('root')
 			.host('example.com')
 			.port(22)
-			.addPath('pwn')
-			.addQuery('id', '123')
-			.addQuery(query)
+			.path('pwn')
+			.query('id', '123')
+			.query(query)
 			.fragment('wtf')
 			.build();
 		Test.stopTest();
@@ -50,8 +42,8 @@ public class UriBuilderTest {
 		Test.startTest();
 		String result = new UriBuilder()
 			.fragment('wtf')
-			.addQuery('id', '123')
-			.addPath('pwn')
+			.query('id', '123')
+			.path('pwn')
 			.port(22)
 			.host('example.com')
 			.userinfo('root')

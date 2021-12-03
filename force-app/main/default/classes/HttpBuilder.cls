@@ -304,11 +304,13 @@ public with sharing class HttpBuilder {
 		if (String.isBlank(key)) {
 			throw new HttpBuilderException(System.Label.http_HeaderKeyInvalid);
 		}
-		// TODO: remove a header when value is set to null
 		if (value != null) {
 			this.request.setHeader(key, String.valueOf(value));
 			// because of limitations of the System.HttpRequest class we need to store these ourselves
 			this.headerByKey.put(key, String.valueOf(value));
+		} else {
+			this.request.setHeader(key, '');
+			this.headerByKey.remove(key);
 		}
 		return this;
 	}
@@ -328,23 +330,12 @@ public with sharing class HttpBuilder {
 		if (String.isBlank(key)) {
 			throw new HttpBuilderException(System.Label.http_CookieKeyInvalid);
 		}
-		// TODO: remove a cookie when value is set to null
 		if (value != null) {
-			List<String> results = new List<String>();
 			this.cookieByKey.put(key, String.valueOf(value));
-			for (String cookieKey : this.cookieByKey.keySet()) {
-				// cookies are formatted as "key=value"
-				String cookie = String.format('{0}={1}',
-					new List<Object>{
-						cookieKey,
-						cookieByKey.get(cookieKey)
-					}
-				);
-				results.add(cookie);
-			}
-			// each cookie (when multiple exist) should be separated by "; "
-			header('Cookie', String.join(results, '; '));
+		} else {
+			this.cookieByKey.remove(key);
 		}
+		createCookie();
 		return this;
 	}
 
@@ -650,10 +641,51 @@ public with sharing class HttpBuilder {
 		}
 	}
 
+	private void createCookie() {
+		List<String> results = new List<String>();
+		for (String cookieKey : this.cookieByKey.keySet()) {
+			// cookies are formatted as "key=value"
+			String cookie = String.format('{0}={1}',
+				new List<Object>{
+					cookieKey,
+					cookieByKey.get(cookieKey)
+				}
+			);
+			results.add(cookie);
+		}
+		// each cookie should be separated by "; "
+		header('Cookie', String.join(results, '; '));
+	}
+
 	private void debugThis() {
-		if (this.debug) {
-			// TODO: implement an HttpLog object
-			// Log.viaEvent(this.request, this.response);
+		if (!this.debug) {
+			return;
+		}
+		HttpLog__c log = new HttpLog__c();
+		// gather request data
+		log.Endpoint__c = this.request.getEndpoint();
+		log.HttpMethod__c = this.request.getMethod();
+		log.IsCompressed__c = this.request.getCompressed();
+		log.Message__c = this.request.getEndpoint() + ' : ' + this.request.getMethod();
+		if (String.isNotBlank(this.request.getBody())) {
+			Integer maxLength = HttpLog__c.RequestBody__c.getDescribe().getLength();
+			log.RequestBody__c = this.request.getBody().abbreviate(maxLength);
+		}
+		// gather response data
+		if (this.response != null) {
+			log.Message__c += ' : ' + this.response.getStatusCode();
+			log.Status__c = this.response.getStatus();
+			log.StatusCode__c = this.response.getStatusCode();
+			if (String.isNotBlank(this.response.getBody())) {
+				Integer maxLength = HttpLog__c.ResponseBody__c.getDescribe().getLength();
+				log.ResponseBody__c = this.response.getBody().abbreviate(maxLength);
+			}
+		}
+		// now insert the log
+		try {
+			insert log;
+		} catch (Exception e) {
+			throw new HttpBuilderException(e.getMessage());
 		}
 	}
 
@@ -668,7 +700,8 @@ public with sharing class HttpBuilder {
 				pageRef.getParameters().remove(key);
 			}
 		}
-		// cache keys can only contain alphanumeric chars
+		// cache keys can only contain alphanumeric characters
+		//	and has a maximum length of 50
 		return String.format('{0}.{1}',
 			new List<String>{
 				this.cachePrefix,
