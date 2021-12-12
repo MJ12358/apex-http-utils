@@ -29,7 +29,7 @@
  *	Heavily influnced by https://github.com/salesforceidentity/jwt
  */
 
-public with sharing class JwtBuilder {
+public class JwtBuilder {
 
 	// RFC 7519 (2015)
 	// JSON Web Token is a compact, URL-safe means of transferring claims between two parties
@@ -60,7 +60,7 @@ public with sharing class JwtBuilder {
 
 	public JwtBuilder sign(Algorithm value) {
 		if (value == null) {
-			throw new JwtBuilderException(System.Label.jwt_AlgorithmInvalid);
+			throw new JwtBuilderException(System.Label.JwtAlgorithmInvalid);
 		}
 		this.algorithm = value;
 		this.headerClaims.put('alg', value.name());
@@ -69,7 +69,7 @@ public with sharing class JwtBuilder {
 
 	public JwtBuilder type(Object value) {
 		if (value == null) {
-			throw new JwtBuilderException(System.Label.jwt_TypeInvalid);
+			throw new JwtBuilderException(System.Label.JwtTypeInvalid);
 		}
 		this.headerClaims.put('typ', value);
 		return this;
@@ -100,7 +100,7 @@ public with sharing class JwtBuilder {
 		if (value != null) {
 			Long exp = this.now + value;
 			if (this.now >= exp) {
-				throw new JwtBuilderException(System.Label.jwt_ExpirationInvalid);
+				throw new JwtBuilderException(System.Label.JwtExpirationInvalid);
 			}
 			addClaim('exp', exp);
 		}
@@ -152,7 +152,7 @@ public with sharing class JwtBuilder {
 
 	public JwtBuilder cert(String certDevName) {
 		if (String.isBlank(certDevName)) {
-			throw new JwtBuilderException(System.Label.jwt_CertificateInvalid);
+			throw new JwtBuilderException(System.Label.JwtCertificateInvalid);
 		}
 		this.certName = certDevName;
 		return this;
@@ -160,7 +160,7 @@ public with sharing class JwtBuilder {
 
 	public JwtBuilder key(String keyContents) {
 		if (String.isBlank(keyContents)) {
-			throw new JwtBuilderException(System.Label.jwt_PrivateKeyInvalid);
+			throw new JwtBuilderException(System.Label.JwtPrivateKeyInvalid);
 		}
 		this.privateKey = keyContents
 			.replace('-----BEGIN RSA PRIVATE KEY-----', '')
@@ -171,7 +171,7 @@ public with sharing class JwtBuilder {
 
 	public JwtBuilder keyFromResource(String name) {
 		if (String.isBlank(name)) {
-			throw new JwtBuilderException(System.Label.jwt_KeyResourceNameInvalid);
+			throw new JwtBuilderException(System.Label.JwtKeyResourceNameInvalid);
 		}
 		StaticResource sr = [SELECT Body FROM StaticResource WHERE Name = :name LIMIT 1];
 		return key(sr.Body.toString());
@@ -230,7 +230,7 @@ public with sharing class JwtBuilder {
 			// HMAC with SHA-256
 			when HS256 {
 				if (String.isBlank(this.privateKey)) {
-					throw new JwtBuilderException(System.Label.jwt_HS256PrivateKeyInvalid);
+					throw new JwtBuilderException(System.Label.JwtHS256PrivateKeyInvalid);
 				}
 				Blob key = System.EncodingUtil.base64Decode(this.privateKey);
 				signature = System.Crypto.generateMac('hmacSHA256', body, key);
@@ -243,7 +243,7 @@ public with sharing class JwtBuilder {
 					Blob key = System.EncodingUtil.base64Decode(this.privateKey);
 					signature = System.Crypto.sign('rsa-sha256', body, key);
 				} else {
-					throw new JwtBuilderException(System.Label.jwt_RS256CertOrKeyInvalid);
+					throw new JwtBuilderException(System.Label.JwtRS256CertOrKeyInvalid);
 				}
 			}
 			when else {
@@ -284,7 +284,7 @@ public with sharing class JwtBuilder {
 	
 	private void addClaim(String name, Object value) {
 		if (String.isBlank(name)) {
-			throw new JwtBuilderException(System.Label.jwt_ClaimNameInvalid);
+			throw new JwtBuilderException(System.Label.JwtClaimNameInvalid);
 		}
 		if (value == null) {
 			this.payloadClaims.remove(name);

@@ -25,7 +25,7 @@
  *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
-public with sharing class HttpBuilder {
+public class HttpBuilder {
 
 	private System.HttpRequest request;
 	private System.HttpResponse response;
@@ -47,7 +47,7 @@ public with sharing class HttpBuilder {
 
 	public HttpBuilder(System.HttpRequest request) {
 		if (System.getApplicationReadWriteMode() == ApplicationReadWriteMode.READ_ONLY) {
-			throw new HttpBuilderException(System.Label.http_ReadOnly);
+			throw new HttpBuilderException(System.Label.HttpReadOnly);
 		}
 		this.request = request;
 		this.cookieByKey = new Map<String, String>();
@@ -167,14 +167,14 @@ public with sharing class HttpBuilder {
 
 	public HttpBuilder method(HttpMethod method) {
 		if (method == null) {
-			throw new HttpBuilderException(System.Label.http_MethodNull);
+			throw new HttpBuilderException(System.Label.HttpMethodNull);
 		}
 		return method(method.name());
 	}
 
 	public HttpBuilder method(String method) {
 		if (String.isBlank(method)) {
-			throw new HttpBuilderException(System.Label.http_MethodInvalid);
+			throw new HttpBuilderException(System.Label.HttpMethodInvalid);
 		}
 		this.request.setMethod(method);
 		return this;
@@ -231,11 +231,11 @@ public with sharing class HttpBuilder {
 
 	public HttpBuilder cache(Object value) {
 		if (value == null) {
-			throw new HttpBuilderException(System.Label.http_CacheInvalid);
+			throw new HttpBuilderException(System.Label.HttpCacheInvalid);
 		}
 		Integer ttl = Integer.valueOf(value);
 		if (ttl < 300 || ttl > 172800) {
-			throw new HttpBuilderException(System.Label.http_CacheInvalid);
+			throw new HttpBuilderException(System.Label.HttpCacheInvalid);
 		}
 		this.cacheTTL = ttl;
 		cache();
@@ -285,7 +285,7 @@ public with sharing class HttpBuilder {
 
 	public HttpBuilder endpoint(String endpoint) {
 		if (String.isBlank(endpoint)) {
-			throw new HttpBuilderException(System.Label.http_EndpointInvalid);
+			throw new HttpBuilderException(System.Label.HttpEndpointInvalid);
 		}
 		this.request.setEndpoint(endpoint);
 		return this;
@@ -293,7 +293,7 @@ public with sharing class HttpBuilder {
 
 	public HttpBuilder endpoint(String namedCredential, String endpoint) {
 		if (String.isBlank(namedCredential) || String.isBlank(endpoint)) {
-			throw new HttpBuilderException(System.Label.http_EndpointInvalid);
+			throw new HttpBuilderException(System.Label.HttpEndpointInvalid);
 		}
 		return endpoint('callout:' + namedCredential + '/' + endpoint);
 	}
@@ -302,7 +302,7 @@ public with sharing class HttpBuilder {
 
 	public HttpBuilder header(String key, Object value) {
 		if (String.isBlank(key)) {
-			throw new HttpBuilderException(System.Label.http_HeaderKeyInvalid);
+			throw new HttpBuilderException(System.Label.HttpHeaderKeyInvalid);
 		}
 		if (value != null) {
 			this.request.setHeader(key, String.valueOf(value));
@@ -328,7 +328,7 @@ public with sharing class HttpBuilder {
 
 	public HttpBuilder cookie(String key, Object value) {
 		if (String.isBlank(key)) {
-			throw new HttpBuilderException(System.Label.http_CookieKeyInvalid);
+			throw new HttpBuilderException(System.Label.HttpCookieKeyInvalid);
 		}
 		if (value != null) {
 			this.cookieByKey.put(key, String.valueOf(value));
@@ -352,11 +352,11 @@ public with sharing class HttpBuilder {
 
 	public HttpBuilder timeout(Object value) {
 		if (value == null) {
-			throw new HttpBuilderException(System.Label.http_TimeoutInvalid);
+			throw new HttpBuilderException(System.Label.HttpTimeoutInvalid);
 		}
 		Integer timeout = Integer.valueOf(value);
 		if (timeout < 1 || timeout > 120000) {
-			throw new HttpBuilderException(System.Label.http_TimeoutInvalid);
+			throw new HttpBuilderException(System.Label.HttpTimeoutInvalid);
 		}
 		this.timeout = timeout;
 		this.request.setTimeout(timeout);
@@ -367,11 +367,11 @@ public with sharing class HttpBuilder {
 
 	public HttpBuilder delay(Object value) {
 		if (value == null) {
-			throw new HttpBuilderException(System.Label.http_DelayInvalid);
+			throw new HttpBuilderException(System.Label.HttpDelayInvalid);
 		}
 		Integer interval = Integer.valueOf(value);
 		if (interval < 1 || interval > 5000) {
-			throw new HttpBuilderException(System.Label.http_DelayInvalid);
+			throw new HttpBuilderException(System.Label.HttpDelayInvalid);
 		}
 		this.retryDelay = interval;
 		return this;
@@ -386,11 +386,11 @@ public with sharing class HttpBuilder {
 
 	public HttpBuilder retry(Object value) {
 		if (value == null) {
-			throw new HttpBuilderException(System.Label.http_RetryCountInvalid);
+			throw new HttpBuilderException(System.Label.HttpRetryCountInvalid);
 		}
 		Integer count = Integer.valueOf(value);
 		if (count < 1 || count > 10) {
-			throw new HttpBuilderException(System.Label.http_RetryCountInvalid);
+			throw new HttpBuilderException(System.Label.HttpRetryCountInvalid);
 		}
 		this.maxRetries = count;
 		retry();
@@ -593,7 +593,7 @@ public with sharing class HttpBuilder {
 		checkLimits();
 		String newEndpoint = getHeader('Location');
 		if (String.isBlank(newEndpoint)) {
-			throw new HttpBuilderException(System.Label.http_RedirectionInvalid);
+			throw new HttpBuilderException(System.Label.HttpRedirectionInvalid);
 		}
 		endpoint(newEndpoint);
 		send();
@@ -606,7 +606,7 @@ public with sharing class HttpBuilder {
 			timeout(this.timeout + 1000);
 			send();
 		} else {
-			throw new HttpBuilderException(System.Label.http_RetryLimitReached);
+			throw new HttpBuilderException(System.Label.HttpRetryLimitReached);
 		}
 	}
 
@@ -617,10 +617,8 @@ public with sharing class HttpBuilder {
 			// use a fake key to determine if the org has platform cache enabled
 			Cache.Org.get(this.cachePrefix + '.0');
 		} catch (Cache.Org.OrgCacheException e) {
-			// TODO: determine whether logging or throwing is good
-			//	when throwing, tests must be able to handle this
-			// throw new HttpBuilderException(System.Label.http_CacheUnavailable);
-			System.debug(System.LoggingLevel.WARN, System.Label.http_CacheUnavailable);
+			// log this (instead of throwing) because its just a 'nice to have' feature
+			System.debug(System.LoggingLevel.WARN, System.Label.HttpCacheUnavailable);
 			return false;
 		}
 		return true;
@@ -628,16 +626,16 @@ public with sharing class HttpBuilder {
 
 	private void checkLimits() {
 		if (System.Limits.getCallouts() >= System.Limits.getLimitCallouts()) {
-			throw new HttpBuilderException(System.Label.http_CalloutLimitReached);
+			throw new HttpBuilderException(System.Label.HttpCalloutLimitReached);
 		}
 		if (System.Limits.getCpuTime() >= System.Limits.getLimitCpuTime()) {
-			throw new HttpBuilderException(System.Label.http_CpuLimitReached);
+			throw new HttpBuilderException(System.Label.HttpCpuLimitReached);
 		}
 	}
 
 	private void checkResponse() {
 		if (this.response == null) {
-			throw new HttpBuilderException(System.Label.http_CheckResponse);
+			throw new HttpBuilderException(System.Label.HttpCheckResponse);
 		}
 	}
 
@@ -693,7 +691,7 @@ public with sharing class HttpBuilder {
 		// this is an easy way to get all query parameters
 		PageReference pageRef = new PageReference(this.request.getEndpoint());
 		// now sanitize them (exclude things like apikey and password)
-		System.Pattern pattern = System.Pattern.compile(System.Label.http_SanitizeCachedUrl);
+		System.Pattern pattern = System.Pattern.compile(System.Label.HttpSanitizeCachedUrl);
 		for (String key : pageRef.getParameters().keySet()) {
 			System.Matcher matcher = pattern.matcher(key);
 			if (matcher.find()) {
@@ -711,7 +709,7 @@ public with sharing class HttpBuilder {
 	}
 
 	private String formatMessage(String msg) {
-		return String.format(System.Label.http_Message,
+		return String.format(System.Label.HttpMessage,
 			new List<Object>{
 				this.response.getStatusCode(),
 				this.response.getStatus(),

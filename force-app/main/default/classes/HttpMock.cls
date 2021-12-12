@@ -105,7 +105,7 @@ public class HttpMock implements System.HttpCalloutMock {
 			}
 			getCurrent().setBody(sr.Body.toString());
 		} catch (System.QueryException e) {
-			e.setMessage(String.format(System.Label.http_ResourceNameDoesNotExist, new String[]{name}));
+			e.setMessage(String.format(System.Label.HttpResourceNameDoesNotExist, new String[]{name}));
 			throw e;
 		}
 		return this;
@@ -126,7 +126,7 @@ public class HttpMock implements System.HttpCalloutMock {
 			}
 			getCurrent().setBody(sr.Body.toString());
 		} catch (System.QueryException e) {
-			e.setMessage(String.format(System.Label.http_ResourceEndpointDoesNotExist, new String[]{name, endpoint}));
+			e.setMessage(String.format(System.Label.HttpResourceEndpointDoesNotExist, new String[]{name, endpoint}));
 			throw e;
 		}
 		return this;
@@ -155,7 +155,7 @@ public class HttpMock implements System.HttpCalloutMock {
 			}
 			return response;
 		} catch (System.ListException e) {
-			e.setMessage(String.format(System.Label.http_NoMockCreated, new String[]{request.getEndpoint()}));
+			e.setMessage(String.format(System.Label.HttpNoMockCreated, new String[]{request.getEndpoint()}));
 			throw e;
 		}
 	}

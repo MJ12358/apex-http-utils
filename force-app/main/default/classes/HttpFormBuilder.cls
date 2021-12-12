@@ -47,10 +47,10 @@ public class HttpFormBuilder {
 
 	public HttpFormBuilder put(String key, Object value) {
 		if (String.isBlank(key)) {
-			throw new HttpFormBuilderException(System.Label.httpform_KeyInvalid);
+			throw new HttpFormBuilderException(System.Label.HttpFormKeyInvalid);
 		}
 		if (value == null) {
-			throw new HttpFormBuilderException(System.Label.httpform_ValueInvalid);
+			throw new HttpFormBuilderException(System.Label.HttpFormValueInvalid);
 		}
 		this.body += writeBoundary();
 		this.body += writeBodyParameter(key, String.valueOf(value));
@@ -60,13 +60,13 @@ public class HttpFormBuilder {
 
 	public HttpFormBuilder put(String key, String file64, String filename) {
 		if (String.isBlank(key)) {
-			throw new HttpFormBuilderException(System.Label.httpform_KeyInvalid);
+			throw new HttpFormBuilderException(System.Label.HttpFormKeyInvalid);
 		}
 		if (String.isBlank(file64)) {
-			throw new HttpFormBuilderException(System.Label.httpform_FileInvalid);
+			throw new HttpFormBuilderException(System.Label.HttpFormFileInvalid);
 		}
 		if (String.isBlank(filename)) {
-			throw new HttpFormBuilderException(System.Label.httpform_FilenameInvalid);
+			throw new HttpFormBuilderException(System.Label.HttpFormFilenameInvalid);
 		}
 		this.body += writeBoundary();
 		this.body += writeBodyParameter(key, file64, filename);
