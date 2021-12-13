@@ -25,7 +25,7 @@
  *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
-public without sharing class HttpStatus {
+public class HttpStatus {
 
 	public static final Map<Integer, Map<String, String>> statusByCode {
 		get {
@@ -91,7 +91,7 @@ public without sharing class HttpStatus {
 						'message' => 'The server has fulfilled a request for the resource, and the response is a representation of the result of one or more instance-manipulations applied to the current instance.'
 					},
 
-					// redirection messages
+					// redirection responses
 					300 => new Map<String, String>{
 						'name' => 'MULTIPLE CHOICE',
 						'message' => 'There are multiple options for the resource that the client may follow.'
