@@ -25,7 +25,7 @@
  *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
-public with sharing class UriBuilder {
+public class UriBuilder {
 
 	//* [scheme:]//[userinfo@][host][:port]/[path][?query][#fragment]
 
@@ -70,7 +70,7 @@ public with sharing class UriBuilder {
 	public UriBuilder port(Integer port) {
 		if (port != null) {
 			if (port < 1 || port > 65535) {
-				throw new UriBuilderException(System.Label.uri_PortInvalid);
+				throw new UriBuilderException(System.Label.UriPortInvalid);
 			}
 			this.port = port;
 		}
@@ -78,7 +78,7 @@ public with sharing class UriBuilder {
 	}
 
 	public UriBuilder path(Object value) {
-		if (value != null) {
+		if (value != null && String.isNotBlank(String.valueOf(value))) {
 			this.paths.add(value);
 		}
 		return this;
@@ -94,8 +94,12 @@ public with sharing class UriBuilder {
 	}
 
 	public UriBuilder query(String key, Object value) {
-		if (String.isNotBlank(key) && value != null) {
-			this.queries.put(key, value);
+		if (String.isNotBlank(key)) {
+			if (value != null && String.isNotBlank(String.valueOf(value))) {
+				this.queries.put(key, value);
+			} else {
+				this.queries.remove(key);
+			}
 		}
 		return this;
 	}
@@ -120,7 +124,7 @@ public with sharing class UriBuilder {
 
 	public UriBuilder encode(String charset) {
 		if (String.isBlank(charset)) {
-			throw new UriBuilderException(System.Label.uri_CharsetInvalid);
+			throw new UriBuilderException(System.Label.UriCharsetInvalid);
 		}
 		this.encode = true;
 		this.charset = charset;
@@ -178,7 +182,7 @@ public with sharing class UriBuilder {
 		//	Internet Explorer cap is 2083
 		//	the spec [RFC7230] "recommends" support for a minimum of 8000
 		if (result.length() > 8192) {
-			throw new UriBuilderException(System.Label.uri_LengthExceeded);
+			throw new UriBuilderException(System.Label.UriLengthExceeded);
 		}
 
 		return result;
