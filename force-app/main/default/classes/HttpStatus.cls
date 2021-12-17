@@ -25,6 +25,8 @@
  *  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **/
 
+// TODO: convert these strings into CustomLabels
+
 public class HttpStatus {
 
 	public static final Map<Integer, Map<String, String>> statusByCode {

@@ -32,8 +32,8 @@ public class HttpBuilder {
 	private Map<String, String> cookieByKey;
 	private Map<String, String> headerByKey;
 	private Boolean cachex = false;
-	private String cachePrefix = 'local.httpbuilder';
-	private Integer cacheTTL = 7200; // seconds
+	private String cachePrefix = System.Label.HttpCachePrefix;
+	private Integer cacheTtl = 7200; // seconds
 	private Boolean debug = false;
 	private Integer maxRetries = 3;
 	private Boolean retry = false;
@@ -237,7 +237,7 @@ public class HttpBuilder {
 		if (ttl < 300 || ttl > 172800) {
 			throw new HttpBuilderException(System.Label.HttpCacheInvalid);
 		}
-		this.cacheTTL = ttl;
+		this.cacheTtl = ttl;
 		cache();
 		return this;
 	}
@@ -508,7 +508,7 @@ public class HttpBuilder {
 		}
 
 		if (this.cachex && hasCache()) {
-			Cache.Org.put(getCacheString(), getBody(), this.cacheTTL);
+			Cache.Org.put(getCacheString(), getBody(), this.cacheTtl);
 		}
 
 		return this;

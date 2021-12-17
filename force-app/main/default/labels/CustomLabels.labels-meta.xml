@@ -73,6 +73,22 @@
 		<value>The claim's "name" must not be blank.</value>
 	</labels>
 	<labels>
+		<fullName>HttpCachePrefix</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>HttpCachePrefix</shortDescription>
+		<value>local.httpbuilder</value>
+	</labels>
+	<labels>
+		<fullName>HttpException</fullName>
+		<categories>http</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>HttpException</shortDescription>
+		<value>An http exception occurred.</value>
+	</labels>
+	<labels>
 		<fullName>HttpReadOnly</fullName>
 		<categories>http</categories>
 		<language>en_US</language>
