@@ -97,13 +97,11 @@ public class JwtBuilder {
 	}
 
 	public JwtBuilder expires(Integer value) {
-		if (value != null) {
-			Long exp = this.now + value;
-			if (this.now >= exp) {
-				throw new JwtBuilderException(System.Label.JwtExpirationInvalid);
-			}
-			addClaim('exp', exp);
+		Long exp = this.now + value;
+		if (this.now >= exp) {
+			throw new JwtBuilderException(System.Label.JwtExpirationInvalid);
 		}
+		addClaim('exp', exp);
 		return this;
 	}
 
@@ -288,9 +286,9 @@ public class JwtBuilder {
 		}
 		if (value == null) {
 			this.payloadClaims.remove(name);
-			return;
+		} else {
+			this.payloadClaims.put(name, value);
 		}
-		this.payloadClaims.put(name, value);
 	}
 
 	private String base64URLencode(Blob input) {

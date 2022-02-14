@@ -41,8 +41,6 @@ public class HttpFormBuilder {
 	private String body = '';
 	private Map<String, Object> params = new Map<String, Object>();
 
-	public HttpFormBuilder() {}
-
 	//* Public methods
 
 	public HttpFormBuilder put(String key, Object value) {
@@ -163,7 +161,7 @@ public class HttpFormBuilder {
 		
 		// TODO: mimeType
 		// String mimeType = FileUtil.getMimeType(filename);
-		String mimeType = 'mimeType';
+		String mimeType = 'text/plain';
 		
 		String contentDisposition = getContentDisposition(key) + '; filename="' + filename + '"';
 		String contentDispositionCrLf = contentDisposition + this.CRLF;
