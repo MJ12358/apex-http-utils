@@ -208,16 +208,14 @@ public class HttpBuilder {
 	}
 
 	public HttpBuilder body(Object body) {
-		if (body != null) {
-			if (body instanceof String) {
-				body((String)body);
-			} else if (body instanceof Blob) {
-				body((Blob)body);
-			} else if (body instanceof Map<String, Object>) {
-				body((Map<String, Object>)body);
-			} else if (body instanceof Dom.Document) {
-				body((Dom.Document)body);
-			}
+		if (body instanceof String) {
+			body((String)body);
+		} else if (body instanceof Blob) {
+			body((Blob)body);
+		} else if (body instanceof Map<String, Object>) {
+			body((Map<String, Object>)body);
+		} else if (body instanceof Dom.Document) {
+			body((Dom.Document)body);
 		}
 		return this;
 	}
@@ -656,6 +654,7 @@ public class HttpBuilder {
 	}
 
 	private void debugThis() {
+		// TODO: utilize the Log.cls from "apex_logger"
 		if (!this.debug) {
 			return;
 		}
@@ -681,6 +680,8 @@ public class HttpBuilder {
 		}
 		// now insert the log
 		try {
+			// TODO: if you use the "apex_logger" you should not run into the
+			//		situation of DML before callout exceptions
 			insert log;
 		} catch (Exception e) {
 			throw new HttpBuilderException(e.getMessage());

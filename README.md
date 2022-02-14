@@ -1,7 +1,10 @@
 # apex-http-utils
 Utilities to make [`Http requests`](https://developer.salesforce.com/docs/atlas.en-us.apexref.meta/apexref/apex_classes_restful_http_httprequest.htm) easier in [Apex](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_dev_guide.htm).
 
-This is a WIP
+<a href="https://githubsfdeploy.herokuapp.com/app/githubdeploy/MJ12358/apex-http-utils?ref=main">
+  <img alt="Deploy to Salesforce"
+       src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/deploy.png">
+</a>
 
 ## This package's highlights include the following:
 
@@ -9,6 +12,9 @@ This is a WIP
 	Wraps System.Http, System.HttpRequest and System.HttpResponse.
 
 	Use it to easily send http requests via a fluent api.
+
+-	### HttpException
+	Used to consistently format http exceptions.
 
 - ### HttpFormBuilder
 	Used to build multipart/form-data requests easily.
@@ -65,6 +71,13 @@ builder
 
 String response = builder.getBody();
 ```
+
+`HttpException`
+
+```apex
+throw new HttpException(request, response);
+```
+
 `HttpFormBuilder`
 
 ```apex

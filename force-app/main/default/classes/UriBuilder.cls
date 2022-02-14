@@ -47,10 +47,15 @@ public class UriBuilder {
 
 	public UriBuilder(String baseUri) {
 		this();
-		this.baseUri = baseUri;
+		base(baseUri);
 	}
 
 	//* Public methods
+
+	public UriBuilder base(String baseUri) {
+		this.baseUri = baseUri;
+		return this;
+	}
 
 	public UriBuilder scheme(String scheme) {
 		this.scheme = scheme;
