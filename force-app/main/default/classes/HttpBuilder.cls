@@ -166,9 +166,6 @@ public class HttpBuilder {
 	//* generic
 
 	public HttpBuilder method(HttpMethod method) {
-		if (method == null) {
-			throw new HttpBuilderException(System.Label.HttpMethodNull);
-		}
 		return method(method.name());
 	}
 
@@ -228,15 +225,14 @@ public class HttpBuilder {
 	}
 
 	public HttpBuilder cache(Object value) {
-		if (value == null) {
-			throw new HttpBuilderException(System.Label.HttpCacheInvalid);
+		if (value != null) {
+			Integer ttl = Integer.valueOf(value);
+			if (ttl < 300 || ttl > 172800) {
+				throw new HttpBuilderException(System.Label.HttpCacheInvalid);
+			}
+			this.cacheTtl = ttl;
+			cache();
 		}
-		Integer ttl = Integer.valueOf(value);
-		if (ttl < 300 || ttl > 172800) {
-			throw new HttpBuilderException(System.Label.HttpCacheInvalid);
-		}
-		this.cacheTtl = ttl;
-		cache();
 		return this;
 	}
 
@@ -349,29 +345,27 @@ public class HttpBuilder {
 	//* timeout
 
 	public HttpBuilder timeout(Object value) {
-		if (value == null) {
-			throw new HttpBuilderException(System.Label.HttpTimeoutInvalid);
+		if (value != null) {
+			Integer timeout = Integer.valueOf(value);
+			if (timeout < 1 || timeout > 120000) {
+				throw new HttpBuilderException(System.Label.HttpTimeoutInvalid);
+			}
+			this.timeout = timeout;
+			this.request.setTimeout(timeout);
 		}
-		Integer timeout = Integer.valueOf(value);
-		if (timeout < 1 || timeout > 120000) {
-			throw new HttpBuilderException(System.Label.HttpTimeoutInvalid);
-		}
-		this.timeout = timeout;
-		this.request.setTimeout(timeout);
 		return this;
 	}
 
 	//* delay
 
 	public HttpBuilder delay(Object value) {
-		if (value == null) {
-			throw new HttpBuilderException(System.Label.HttpDelayInvalid);
+		if (value != null) {
+			Integer interval = Integer.valueOf(value);
+			if (interval < 1 || interval > 5000) {
+				throw new HttpBuilderException(System.Label.HttpDelayInvalid);
+			}
+			this.retryDelay = interval;
 		}
-		Integer interval = Integer.valueOf(value);
-		if (interval < 1 || interval > 5000) {
-			throw new HttpBuilderException(System.Label.HttpDelayInvalid);
-		}
-		this.retryDelay = interval;
 		return this;
 	}
 
@@ -383,15 +377,14 @@ public class HttpBuilder {
 	}
 
 	public HttpBuilder retry(Object value) {
-		if (value == null) {
-			throw new HttpBuilderException(System.Label.HttpRetryCountInvalid);
+		if (value != null) {
+			Integer count = Integer.valueOf(value);
+			if (count < 1 || count > 10) {
+				throw new HttpBuilderException(System.Label.HttpRetryCountInvalid);
+			}
+			this.maxRetries = count;
+			retry();
 		}
-		Integer count = Integer.valueOf(value);
-		if (count < 1 || count > 10) {
-			throw new HttpBuilderException(System.Label.HttpRetryCountInvalid);
-		}
-		this.maxRetries = count;
-		retry();
 		return this;
 	}
 
@@ -700,7 +693,7 @@ public class HttpBuilder {
 			}
 		}
 		// cache keys can only contain alphanumeric characters
-		//	and has a maximum length of 50
+		//	and have a maximum length of 50
 		return String.format('{0}.{1}',
 			new List<String>{
 				this.cachePrefix,

@@ -120,3 +120,5 @@ builder
 
 String result = builder.build();
 ```
+
+For those on an Apex Code budget, at last count this repo used `45,671` characters.

@@ -161,20 +161,6 @@ public class HttpBuilderTest {
 	}
 
 	@IsTest
-	static void testNullMethod() {
-		Test.startTest();
-		try {
-			new HttpBuilder().endpoint(endpoint)
-				.method((HttpMethod)null) // ambugious param exception if its not cast
-				.send();
-			System.assert(false, 'Expected an exception');
-		} catch (HttpBuilderException e) {
-			System.assert(true, 'Exception caught');
-		}
-		Test.stopTest();
-	}
-
-	@IsTest
 	static void testBlankMethod() {
 		Test.startTest();
 		try {
@@ -248,15 +234,12 @@ public class HttpBuilderTest {
 	}
 
 	@IsTest
-	static void testLimits() {
+	static void testCacheLimits() {
 		Test.startTest();
 		try {
-			mock.setStatusCode(408);
 			new HttpBuilder().endpoint(endpoint)
-				.delay(Decimal.valueOf(1))
-				.retry(Decimal.valueOf(100))
-				.get()
-				.send();
+			.cache(172801)
+			.build();
 			System.assert(false, 'Expected an exception');
 		} catch (HttpBuilderException e) {
 			System.assert(true, 'Exception caught');
@@ -265,12 +248,41 @@ public class HttpBuilderTest {
 	}
 
 	@IsTest
-	static void testCacheLimits() {
+	static void testTimeoutLimits() {
 		Test.startTest();
 		try {
 			new HttpBuilder().endpoint(endpoint)
-			.cache(172801)
+			.timeout(120001)
 			.build();
+			System.assert(false, 'Expected an exception');
+		} catch (HttpBuilderException e) {
+			System.assert(true, 'Exception caught');
+		}
+		Test.stopTest();
+	}
+
+	@IsTest
+	static void testDelayLimits() {
+		Test.startTest();
+		try {
+			new HttpBuilder().endpoint(endpoint)
+			.delay(5001)
+			.build();
+			System.assert(false, 'Expected an exception');
+		} catch (HttpBuilderException e) {
+			System.assert(true, 'Exception caught');
+		}
+		Test.stopTest();
+	}
+
+	@IsTest
+	static void testRetryLimits() {
+		Test.startTest();
+		try {
+			new HttpBuilder().endpoint(endpoint)
+				.retry(11)
+				.get()
+				.send();
 			System.assert(false, 'Expected an exception');
 		} catch (HttpBuilderException e) {
 			System.assert(true, 'Exception caught');

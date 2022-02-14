@@ -97,14 +97,6 @@
 		<value>Callouts cannot be made when the application/organization is in read only mode.</value>
 	</labels>
 	<labels>
-		<fullName>HttpMethodNull</fullName>
-		<categories>http</categories>
-		<language>en_US</language>
-		<protected>false</protected>
-		<shortDescription>HttpMethodNull</shortDescription>
-		<value>The http method must not be null.</value>
-	</labels>
-	<labels>
 		<fullName>HttpMethodInvalid</fullName>
 		<categories>http</categories>
 		<language>en_US</language>
