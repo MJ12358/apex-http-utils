@@ -66,7 +66,7 @@ public virtual class BaseRequest {
 		validateRequest();
 		HttpBuilder builder = new HttpBuilder();
 		try {
-			builder.endpoint(buildRequestUrl())
+			builder.endpoint(getRequestUrl())
 				.body(objectx)
 				.cache(getCacheTtl())
 				.debug(getDebug())
@@ -96,14 +96,7 @@ public virtual class BaseRequest {
 		addPath(urlPath);
 		return getRequestUrl();
 	}
-
-	@TestVisible
-	protected void setRequestUrl(String requestUrl) {
-		if (String.isNotBlank(requestUrl)) {
-			this.requestUrl = requestUrl;
-		}
-	}
-
+	
 	//* Getters/Setters
 
 	// cache
