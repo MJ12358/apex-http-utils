@@ -1,12 +1,12 @@
 <aura:documentation>
-	<aura:description>
-		Huge thanks to @pozil[GitHub] for the inspiration for this.
-		https://github.com/pozil/server-action-service
-		
-		Created by: MJ12358
-	</aura:description>
+  <aura:description>
+    Huge thanks to @pozil[GitHub] for the inspiration for this.
+    https://github.com/pozil/server-action-service
+    
+    Created by: MJ12358
+  </aura:description>
 
-	<aura:example name="ExampleName" ref="exampleComponentName" label="Label">
+  <aura:example name="ExampleName" ref="exampleComponentName" label="Label">
 
-	</aura:example>
+  </aura:example>
 </aura:documentation>

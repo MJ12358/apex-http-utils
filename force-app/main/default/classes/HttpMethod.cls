@@ -30,70 +30,70 @@ public enum HttpMethod {
 /****
  * @CRUD = Create, Read, Update, Delete
  * @Features =
- *	Cacheable: A response that can be cached, retrieved and used at a later time.
- *	Idempotent: An identical request can be made several times with the same effect while leaving the server in the same state.
- *	Safe: Doesn't alter the state of the server, eg. a read-only operation
+ *  Cacheable: A response that can be cached, retrieved and used at a later time.
+ *  Idempotent: An identical request can be made several times with the same effect while leaving the server in the same state.
+ *  Safe: Doesn't alter the state of the server, eg. a read-only operation
  ****/
 
 /**
  * The CONNECT method establishes a tunnel to the server identified by the target resource.
  * @CRUD Read/Retrieve
  */
-		CONNECT,
+    CONNECT,
 
 /**
  * The DELETE method deletes the specified resource.
  * @CRUD Delete
  * @Features Idempotent
  */
-		DELETEX, // DELETE is a reserved word in apex
+    DELETEX, // DELETE is a reserved word in apex
 
 /**
  * The GET method requests a representation of the specified resource.
  * @CRUD Read/Retrieve
  * @Features Cacheable,Idempotent,Safe
  */
-		GET,
+    GET,
 
 /**
  * The HEAD method asks for a response identical to that of a GET request, but without the response body.
  * @CRUD Read/Retrieve
  * @Features Cacheable,Idempotent,Safe
  */
-		HEAD,
+    HEAD,
 
 /**
  * The OPTIONS method is used to describe the communication options for the target resource.
  * @CRUD Read/Retrieve
  * @Features Idempotent,Safe
  */
-		OPTIONS,
+    OPTIONS,
 
 /**
  * The PATCH method is used to apply partial modifications to a resource.
  * @CRUD Update
  */
-		PATCH,
+    PATCH,
 
 /**
  * The POST method is used to submit an entity to the specified resource, often causing a change in state or side effects on the server.
  * @CRUD Create
  * @Features Cacheable(only if freshness info is included)
  */
-		POST,
+    POST,
 
 /**
  * The PUT method replaces all current representations of the target resource with the request payload.
  * @CRUD Update
  * @Features Idempotent
  */
-		PUT,
+    PUT,
 
 /**
  * The TRACE method performs a message loop-back test along the path to the target resource.
  * @CRUD Read/Retrieve
  * @Features Idempotent
  */
-		TRACE
+    TRACE
 
 }

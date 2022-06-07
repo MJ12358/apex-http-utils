@@ -27,147 +27,147 @@
 
 public virtual class BaseRequest {
 
-	private Object cacheTtl; // seconds
-	private Boolean debug;
-	private Map<String, Object> headers;
-	private Object timeout; // milliseconds
-	private UriBuilder uriBuilder;
+  private Object cacheTtl; // seconds
+  private Boolean debug;
+  private Map<String, Object> headers;
+  private Object timeout; // milliseconds
+  private UriBuilder uriBuilder;
 
-	public BaseRequest(String requestUrl) {
-		this.headers = new Map<String, Object>();
-		this.uriBuilder = new UriBuilder(requestUrl);
-	}
+  public BaseRequest(String requestUrl) {
+    this.headers = new Map<String, Object>();
+    this.uriBuilder = new UriBuilder(requestUrl);
+  }
 
-	//* Validation
+  //* Validation
 
-	protected virtual void validateRequest() {}
+  protected virtual void validateRequest() {}
 
-	protected virtual void validateResponse(System.HttpResponse response) {}
+  protected virtual void validateResponse(System.HttpResponse response) {}
 
-	//* Request methods
+  //* Request methods
 
-	@TestVisible
-	protected virtual System.HttpResponse send(String method) {
-		return send(method, null);
-	}
+  @TestVisible
+  protected virtual System.HttpResponse send(String method) {
+    return send(method, null);
+  }
 
-	@TestVisible
-	protected virtual System.HttpResponse send(HttpMethod method) {
-		return send(method.name(), null);
-	}
+  @TestVisible
+  protected virtual System.HttpResponse send(HttpMethod method) {
+    return send(method.name(), null);
+  }
 
-	@TestVisible
-	protected virtual System.HttpResponse send(HttpMethod method, Object objectx) {
-		return send(method.name(), objectx);
-	}
+  @TestVisible
+  protected virtual System.HttpResponse send(HttpMethod method, Object objectx) {
+    return send(method.name(), objectx);
+  }
 
-	@TestVisible
-	protected virtual System.HttpResponse send(String method, Object objectx) {
-		validateRequest();
-		HttpBuilder builder = new HttpBuilder();
-		try {
-			builder.endpoint(getRequestUrl())
-				.body(objectx)
-				.cache(getCacheTtl())
-				.debug(getDebug())
-				.header(getHeaders())
-				.method(method)
-				.timeout(getTimeout())
-				.send();
-		} catch (HttpBuilderException e) {
-			throw new HttpException(e.getMessage());
-		} catch (System.CalloutException e) {
-			throw new HttpException(builder.getRequest(), builder.getResponse());
-		} finally {
-			validateResponse(builder.getResponse());
-		}
-		return builder.getResponse();
-	}
+  @TestVisible
+  protected virtual System.HttpResponse send(String method, Object objectx) {
+    validateRequest();
+    HttpBuilder builder = new HttpBuilder();
+    try {
+      builder.endpoint(getRequestUrl())
+        .body(objectx)
+        .cache(getCacheTtl())
+        .debug(getDebug())
+        .header(getHeaders())
+        .method(method)
+        .timeout(getTimeout())
+        .send();
+    } catch (HttpBuilderException e) {
+      throw new HttpException(e.getMessage());
+    } catch (System.CalloutException e) {
+      throw new HttpException(builder.getRequest(), builder.getResponse());
+    } finally {
+      validateResponse(builder.getResponse());
+    }
+    return builder.getResponse();
+  }
 
-	//* Request Url get/build
+  //* Request Url get/build
 
-	@TestVisible
-	protected String getRequestUrl() {
-		return this.uriBuilder.build();
-	}
+  @TestVisible
+  protected String getRequestUrl() {
+    return this.uriBuilder.build();
+  }
 
-	@TestVisible
-	protected String getRequestUrl(String urlPath) {
-		addPath(urlPath);
-		return getRequestUrl();
-	}
-	
-	//* Getters/Setters
+  @TestVisible
+  protected String getRequestUrl(String urlPath) {
+    addPath(urlPath);
+    return getRequestUrl();
+  }
+  
+  //* Getters/Setters
 
-	// cache
+  // cache
 
-	@TestVisible
-	protected virtual Object getCacheTtl() {
-		return this.cacheTtl;
-	}
+  @TestVisible
+  protected virtual Object getCacheTtl() {
+    return this.cacheTtl;
+  }
 
-	@TestVisible
-	protected void setCacheTTL(Object value) {
-		this.cacheTtl = value;
-	}
+  @TestVisible
+  protected void setCacheTTL(Object value) {
+    this.cacheTtl = value;
+  }
 
-	// debug
+  // debug
 
-	@TestVisible
-	protected virtual Boolean getDebug() {
-		return this.debug;
-	}
+  @TestVisible
+  protected virtual Boolean getDebug() {
+    return this.debug;
+  }
 
-	@TestVisible
-	protected void setDebug(Boolean value) {
-		if (value != null) {
-			this.debug = value;
-		}
-	}
+  @TestVisible
+  protected void setDebug(Boolean value) {
+    if (value != null) {
+      this.debug = value;
+    }
+  }
 
-	// timeout
+  // timeout
 
-	@TestVisible
-	protected virtual Object getTimeout() {
-		return this.timeout;
-	}
+  @TestVisible
+  protected virtual Object getTimeout() {
+    return this.timeout;
+  }
 
-	@TestVisible
-	protected void setTimeout(Object value) {
-		this.timeout = value;
-	}
+  @TestVisible
+  protected void setTimeout(Object value) {
+    this.timeout = value;
+  }
 
-	//* Utility methods
+  //* Utility methods
 
-	@TestVisible
-	protected virtual void addHeader(String key, Object value) {
-		if (String.isNotBlank(key)) {
-			if (value != null && String.isNotBlank(String.valueOf(value))) {
-				this.headers.put(key, value);
-			} else {
-				this.headers.remove(key);
-			}
-		}
-	}
+  @TestVisible
+  protected virtual void addHeader(String key, Object value) {
+    if (String.isNotBlank(key)) {
+      if (value != null && String.isNotBlank(String.valueOf(value))) {
+        this.headers.put(key, value);
+      } else {
+        this.headers.remove(key);
+      }
+    }
+  }
 
-	@TestVisible
-	protected virtual void addPath(Object value) {
-		this.uriBuilder.path(value);
-	}
+  @TestVisible
+  protected virtual void addPath(Object value) {
+    this.uriBuilder.path(value);
+  }
 
-	@TestVisible
-	protected virtual void addQuery(String key, Object value) {
-		this.uriBuilder.query(key, value);
-	}
+  @TestVisible
+  protected virtual void addQuery(String key, Object value) {
+    this.uriBuilder.query(key, value);
+  }
 
-	@TestVisible
-	protected virtual Map<String, Object> getHeaders() {
-		return this.headers;
-	}
+  @TestVisible
+  protected virtual Map<String, Object> getHeaders() {
+    return this.headers;
+  }
 
-	@TestVisible
-	protected virtual String serialize(Object objectx) {
-		return System.JSON.serialize(objectx, true);
-	}
+  @TestVisible
+  protected virtual String serialize(Object objectx) {
+    return System.JSON.serialize(objectx, true);
+  }
 
 }

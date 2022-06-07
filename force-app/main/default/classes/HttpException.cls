@@ -27,68 +27,68 @@
 
 public virtual class HttpException extends Exception {
 
-	private System.HttpRequest request;
-	private System.HttpResponse response;
+  private System.HttpRequest request;
+  private System.HttpResponse response;
 
-	public HttpException(System.HttpRequest request, System.HttpResponse response) {
-		System.debug(String.format('REQUEST:\n{0}\nRESPONSE:\n{1}',
-			new List<Object>{
-				request,
-				response
-			}
-		));
-		this.request = request;
-		this.response = response;
-	}
+  public HttpException(System.HttpRequest request, System.HttpResponse response) {
+    System.debug(String.format('REQUEST:\n{0}\nRESPONSE:\n{1}',
+      new List<Object>{
+        request,
+        response
+      }
+    ));
+    this.request = request;
+    this.response = response;
+  }
 
-	public virtual String getContext() {
-		return this.getTypeName();
-	}
+  public virtual String getContext() {
+    return this.getTypeName();
+  }
 
-	public virtual String getErrorMessage() {
-		return System.Label.HttpException;
-	}
+  public virtual String getErrorMessage() {
+    return System.Label.HttpException;
+  }
 
-	public override String getMessage() {
-		if (this.response == null) {
-			return String.format('{0}: {1}',
-				new List<Object>{
-					getContext(),
-					super.getMessage()
-				}
-			);
-		}
-		return String.format('{0}{1} : {2}({3}) : {4}',
-			new List<Object>{
-				getContext(),
-				this.request != null ? '/' + this.request.getEndpoint().substringAfterLast('/').substringBefore('?') : '',
-				this.response.getStatus(),
-				this.response.getStatusCode(),
-				getErrorMessage()
-			}
-		);
-	}
+  public override String getMessage() {
+    if (this.response == null) {
+      return String.format('{0}: {1}',
+        new List<Object>{
+          getContext(),
+          super.getMessage()
+        }
+      );
+    }
+    return String.format('{0}{1} : {2}({3}) : {4}',
+      new List<Object>{
+        getContext(),
+        this.request != null ? '/' + this.request.getEndpoint().substringAfterLast('/').substringBefore('?') : '',
+        this.response.getStatus(),
+        this.response.getStatusCode(),
+        getErrorMessage()
+      }
+    );
+  }
 
-	public System.HttpRequest getRequest() {
-		return this.request;
-	}
+  public System.HttpRequest getRequest() {
+    return this.request;
+  }
 
-	public System.HttpResponse getResponse() {
-		return this.response;
-	}
+  public System.HttpResponse getResponse() {
+    return this.response;
+  }
 
-	public virtual String getDebugMessage() {
-		return String.format('CONTEXT: {0}\nMESSAGE: {1}\nENDPOINT: {2}\nREQUEST BODY: {3}\nRESPONSE BODY: {4}\nSTATUS: {5}\nSTATUS CODE: {6}',
-			new List<Object>{
-				getContext(),
-				getErrorMessage(),
-				this.request != null ? this.request.getEndpoint() : '',
-				this.request != null ? this.request.getBody().abbreviate(8192) : '',
-				this.response != null ? this.response.getBody().abbreviate(8192) : '',
-				this.response != null ? this.response.getStatus() : '',
-				this.response != null ? this.response.getStatusCode() : 0
-			}
-		);
-	}
+  public virtual String getDebugMessage() {
+    return String.format('CONTEXT: {0}\nMESSAGE: {1}\nENDPOINT: {2}\nREQUEST BODY: {3}\nRESPONSE BODY: {4}\nSTATUS: {5}\nSTATUS CODE: {6}',
+      new List<Object>{
+        getContext(),
+        getErrorMessage(),
+        this.request != null ? this.request.getEndpoint() : '',
+        this.request != null ? this.request.getBody().abbreviate(8192) : '',
+        this.response != null ? this.response.getBody().abbreviate(8192) : '',
+        this.response != null ? this.response.getStatus() : '',
+        this.response != null ? this.response.getStatusCode() : 0
+      }
+    );
+  }
 
 }

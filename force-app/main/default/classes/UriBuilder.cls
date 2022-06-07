@@ -27,183 +27,183 @@
 
 public class UriBuilder {
 
-	//* [scheme:]//[userinfo@][host][:port]/[path][?query][#fragment]
+  //* [scheme:]//[userinfo@][host][:port]/[path][?query][#fragment]
 
-	private String baseUri;
-	private String scheme;
-	private String userinfo;
-	private String host;
-	private Integer port;
-	private List<Object> paths;
-	private Map<String, Object> queries;
-	private String fragment;
-	private String charset;
-	private Boolean encode = false;
+  private String baseUri;
+  private String scheme;
+  private String userinfo;
+  private String host;
+  private Integer port;
+  private List<Object> paths;
+  private Map<String, Object> queries;
+  private String fragment;
+  private String charset;
+  private Boolean encode = false;
 
-	public UriBuilder() {
-		this.paths = new List<String>();
-		this.queries = new Map<String, Object>();
-	}
+  public UriBuilder() {
+    this.paths = new List<String>();
+    this.queries = new Map<String, Object>();
+  }
 
-	public UriBuilder(String baseUri) {
-		this();
-		base(baseUri);
-	}
+  public UriBuilder(String baseUri) {
+    this();
+    base(baseUri);
+  }
 
-	//* Public methods
+  //* Public methods
 
-	public UriBuilder base(String baseUri) {
-		this.baseUri = baseUri;
-		return this;
-	}
+  public UriBuilder base(String baseUri) {
+    this.baseUri = baseUri;
+    return this;
+  }
 
-	public UriBuilder scheme(String scheme) {
-		this.scheme = scheme;
-		return this;
-	}
+  public UriBuilder scheme(String scheme) {
+    this.scheme = scheme;
+    return this;
+  }
 
-	public UriBuilder userinfo(String userinfo) {
-		this.userinfo = userinfo;
-		return this;
-	}
+  public UriBuilder userinfo(String userinfo) {
+    this.userinfo = userinfo;
+    return this;
+  }
 
-	public UriBuilder host(String host) {
-		this.host = host;
-		return this;
-	}
+  public UriBuilder host(String host) {
+    this.host = host;
+    return this;
+  }
 
-	public UriBuilder port(Integer port) {
-		if (port != null) {
-			if (port < 1 || port > 65535) {
-				throw new UriBuilderException(System.Label.UriPortInvalid);
-			}
-			this.port = port;
-		}
-		return this;
-	}
+  public UriBuilder port(Integer port) {
+    if (port != null) {
+      if (port < 1 || port > 65535) {
+        throw new UriBuilderException(System.Label.UriPortInvalid);
+      }
+      this.port = port;
+    }
+    return this;
+  }
 
-	public UriBuilder path(Object value) {
-		if (value != null && String.isNotBlank(String.valueOf(value))) {
-			this.paths.add(value);
-		}
-		return this;
-	}
+  public UriBuilder path(Object value) {
+    if (value != null && String.isNotBlank(String.valueOf(value))) {
+      this.paths.add(value);
+    }
+    return this;
+  }
 
-	public UriBuilder path(List<Object> values) {
-		if (values != null) {
-			for (Object value : values) {
-				path(value);
-			}
-		}
-		return this;
-	}
+  public UriBuilder path(List<Object> values) {
+    if (values != null) {
+      for (Object value : values) {
+        path(value);
+      }
+    }
+    return this;
+  }
 
-	public UriBuilder query(String key, Object value) {
-		if (String.isNotBlank(key)) {
-			if (value != null && String.isNotBlank(String.valueOf(value))) {
-				this.queries.put(key, value);
-			} else {
-				this.queries.remove(key);
-			}
-		}
-		return this;
-	}
+  public UriBuilder query(String key, Object value) {
+    if (String.isNotBlank(key)) {
+      if (value != null && String.isNotBlank(String.valueOf(value))) {
+        this.queries.put(key, value);
+      } else {
+        this.queries.remove(key);
+      }
+    }
+    return this;
+  }
 
-	public UriBuilder query(Map<String, Object> values) {
-		if (values != null) {
-			for (String key : values.keySet()) {
-				query(key, values.get(key));
-			}
-		}
-		return this;
-	}
+  public UriBuilder query(Map<String, Object> values) {
+    if (values != null) {
+      for (String key : values.keySet()) {
+        query(key, values.get(key));
+      }
+    }
+    return this;
+  }
 
-	public UriBuilder fragment(String value) {
-		this.fragment = value;
-		return this;
-	}
+  public UriBuilder fragment(String value) {
+    this.fragment = value;
+    return this;
+  }
 
-	public UriBuilder encode() {
-		return encode('UTF-8');
-	}
+  public UriBuilder encode() {
+    return encode('UTF-8');
+  }
 
-	public UriBuilder encode(String charset) {
-		if (String.isBlank(charset)) {
-			throw new UriBuilderException(System.Label.UriCharsetInvalid);
-		}
-		this.encode = true;
-		this.charset = charset;
-		return this;
-	}
+  public UriBuilder encode(String charset) {
+    if (String.isBlank(charset)) {
+      throw new UriBuilderException(System.Label.UriCharsetInvalid);
+    }
+    this.encode = true;
+    this.charset = charset;
+    return this;
+  }
 
-	//* Build the uri
+  //* Build the uri
 
-	public String build() {
-		Integer count = 0;
-		String result = '';
+  public String build() {
+    Integer count = 0;
+    String result = '';
 
-		if (String.isNotBlank(this.baseUri)) {
-			result = this.baseUri;
-		} else {
-			if (String.isNotBlank(this.scheme)) {
-				result += this.scheme + ':';
-			}
-			if (String.isNotBlank(this.host)) {
-				result += '//';
-				if (String.isNotBlank(this.userinfo)) {
-					result += this.userinfo + '@';
-				}
-				result += this.host;
-				if (this.port != null) {
-					result += ':' + String.valueOf(this.port);
-				}
-			}
-		}
+    if (String.isNotBlank(this.baseUri)) {
+      result = this.baseUri;
+    } else {
+      if (String.isNotBlank(this.scheme)) {
+        result += this.scheme + ':';
+      }
+      if (String.isNotBlank(this.host)) {
+        result += '//';
+        if (String.isNotBlank(this.userinfo)) {
+          result += this.userinfo + '@';
+        }
+        result += this.host;
+        if (this.port != null) {
+          result += ':' + String.valueOf(this.port);
+        }
+      }
+    }
 
-		// build paths
-		for (Object path : this.paths) {
-			result += '/' + String.valueOf(path);
-		}
+    // build paths
+    for (Object path : this.paths) {
+      result += '/' + String.valueOf(path);
+    }
 
-		// build queries eg. ?key=value or &key=value
-		for (String key : this.queries.keySet()) {
-			String value = String.valueOf(this.queries.get(key));
-			result += String.format('{0}{1}={2}',
-				new List<String>{
-					getDelimiter(count),
-					key,
-					this.encode ? urlEncode(value) : value
-				}
-			);
-			count++;
-		}
+    // build queries eg. ?key=value or &key=value
+    for (String key : this.queries.keySet()) {
+      String value = String.valueOf(this.queries.get(key));
+      result += String.format('{0}{1}={2}',
+        new List<String>{
+          getDelimiter(count),
+          key,
+          this.encode ? urlEncode(value) : value
+        }
+      );
+      count++;
+    }
 
-		// add fragment
-		if (String.isNotBlank(this.fragment)) {
-			result += '#' + this.fragment;
-		}
+    // add fragment
+    if (String.isNotBlank(this.fragment)) {
+      result += '#' + this.fragment;
+    }
 
-		// Most web servers limit to 8192
-		//	Internet Explorer cap is 2083
-		//	the spec [RFC7230] "recommends" support for a minimum of 8000
-		if (result.length() > 8192) {
-			throw new UriBuilderException(System.Label.UriLengthExceeded);
-		}
+    // Most web servers limit to 8192
+    //  Internet Explorer cap is 2083
+    //  the spec [RFC7230] "recommends" support for a minimum of 8000
+    if (result.length() > 8192) {
+      throw new UriBuilderException(System.Label.UriLengthExceeded);
+    }
 
-		return result;
-	}
+    return result;
+  }
 
-	//* Private methods
+  //* Private methods
 
-	private String getDelimiter(Integer count) {
-		return count == 0 ? '?' : '&';
-	}
+  private String getDelimiter(Integer count) {
+    return count == 0 ? '?' : '&';
+  }
 
-	// TODO: verify these are correct
-	private String urlEncode(String value) {
-		return System.EncodingUtil.urlEncode(value, this.charset)
-			.replaceAll('\\+', '%20')
-			.replaceAll('\\*', '%2A')
-			.replaceAll('\\%7E', '~');
-	}
+  // TODO: verify these are correct
+  private String urlEncode(String value) {
+    return System.EncodingUtil.urlEncode(value, this.charset)
+      .replaceAll('\\+', '%20')
+      .replaceAll('\\*', '%2A')
+      .replaceAll('\\%7E', '~');
+  }
 }
