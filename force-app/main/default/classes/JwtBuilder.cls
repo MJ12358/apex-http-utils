@@ -171,7 +171,12 @@ public class JwtBuilder {
 		if (String.isBlank(name)) {
 			throw new JwtBuilderException(System.Label.JwtKeyResourceNameInvalid);
 		}
-		StaticResource sr = [SELECT Body FROM StaticResource WHERE Name = :name LIMIT 1];
+		StaticResource sr;
+		try {
+			sr = [SELECT Body FROM StaticResource WHERE Name = :name LIMIT 1];
+		} catch (System.QueryException e) {
+			throw new JwtBuilderException(System.Label.JwtKeyResourceNotFound);
+		}
 		return key(sr.Body.toString());
 	}
 

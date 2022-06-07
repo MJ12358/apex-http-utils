@@ -49,6 +49,14 @@
 		<value>The private key resource name must not be blank.</value>
 	</labels>
 	<labels>
+		<fullName>JwtKeyResourceNotFound</fullName>
+		<categories>jwt</categories>
+		<language>en_US</language>
+		<protected>false</protected>
+		<shortDescription>JwtKeyResourceNotFound</shortDescription>
+		<value>The private key static resource was not found.</value>
+	</labels>
+	<labels>
 		<fullName>JwtHS256PrivateKeyInvalid</fullName>
 		<categories>jwt</categories>
 		<language>en_US</language>
