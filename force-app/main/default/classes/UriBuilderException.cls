@@ -1,7 +1,7 @@
 /**
  * Created on Oct 31 2019
  *
- * Copyright (c) 2019 Matt Jants
+ * Copyright (c) 2019 MJ12358
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, 
